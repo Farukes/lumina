@@ -52,7 +52,7 @@ Lumina, AGY ve Claude Code'a doğrudan bağlanabilen yerel bir **MCP Sunucusu** 
   "mcpServers": {
     "lumina-design": {
       "command": "python",
-      "args": ["C:/Users/omere/Desktop/CLI Tasarım/mcp/server.py"]
+      "args": ["./mcp/server.py"]
     }
   }
 }
