@@ -121,12 +121,33 @@ def main():
                     data = {}
             mcp_servers = data.get("mcpServers", {})
             mcp_servers["lumina"] = {
-                "command": "lumina",
-                "args": ["mcp"]
+                "command": sys.executable,
+                "args": [str(dest_engine / "mcp" / "server.py")]
             }
             data["mcpServers"] = mcp_servers
             gemini_config.write_text(json.dumps(data, indent=2), encoding="utf-8")
             print("  ✔ Configured Lumina MCP in Antigravity (~/.gemini/config/mcp_config.json)")
+
+            # Generate AGY tool schemas
+            agy_mcp = Path.home() / ".gemini" / "antigravity-cli" / "mcp" / "lumina"
+            if (Path.home() / ".gemini" / "antigravity-cli").exists():
+                agy_mcp.mkdir(parents=True, exist_ok=True)
+                sys.path.insert(0, str(dest_engine))
+                try:
+                    from mcp.server import TOOLS
+                    for tool in TOOLS:
+                        s = {
+                            "name": tool["name"],
+                            "description": tool["description"],
+                            "parameters": tool.get("inputSchema", {"type": "object", "properties": {}})
+                        }
+                        (agy_mcp / f"{tool['name']}.json").write_text(json.dumps(s, indent=2), encoding="utf-8")
+                    (agy_mcp / "instructions.md").write_text(
+                        "# Lumina Design MCP Server\n\nGenerative AI Design Intelligence Engine for Antigravity.\n",
+                        encoding="utf-8"
+                    )
+                except Exception:
+                    pass
     except Exception:
         pass
 

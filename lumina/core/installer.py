@@ -341,9 +341,11 @@ def _register_mcp_configs(cmd_executable: str = "lumina") -> list:
             if not isinstance(mcp_servers, dict):
                 mcp_servers = {}
 
+            # Use absolute python binary and server.py script path for 100% reliable execution
+            engine_server = LUMINA_HOME / "engine" / "mcp" / "server.py"
             mcp_servers["lumina"] = {
-                "command": cmd_executable,
-                "args": ["mcp"]
+                "command": sys.executable,
+                "args": [str(engine_server)]
             }
             data["mcpServers"] = mcp_servers
 
@@ -352,6 +354,31 @@ def _register_mcp_configs(cmd_executable: str = "lumina") -> list:
         except Exception:
             pass
 
+    # 4. Generate Antigravity Tool Schemas in ~/.gemini/antigravity-cli/mcp/lumina
+    try:
+        agy_tools_dir = Path.home() / ".gemini" / "antigravity-cli" / "mcp" / "lumina"
+        if (Path.home() / ".gemini" / "antigravity-cli").exists():
+            agy_tools_dir.mkdir(parents=True, exist_ok=True)
+            from mcp.server import TOOLS
+            for tool in TOOLS:
+                schema = {
+                    "name": tool["name"],
+                    "description": tool["description"],
+                    "parameters": tool.get("inputSchema", {"type": "object", "properties": {}})
+                }
+                (agy_tools_dir / f"{tool['name']}.json").write_text(json.dumps(schema, indent=2), encoding="utf-8")
+
+            instructions = (
+                "# Lumina Design MCP Server\n\n"
+                "Generative AI Design Intelligence Engine for Antigravity & Claude Code.\n"
+                "Provides parametric design tokens, composition grammar laws, visual primitives, and critique tools.\n"
+            )
+            (agy_tools_dir / "instructions.md").write_text(instructions, encoding="utf-8")
+            registered.append(f"Generated Antigravity MCP tool schemas ({agy_tools_dir.name})")
+    except Exception:
+        pass
+
     return registered
+
 
 
