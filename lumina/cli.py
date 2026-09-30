@@ -69,9 +69,9 @@ def main(ctx):
                 ]
             ).ask()
             if action and "fix" in action:
-                ctx.invoke(fix)
+                ctx.invoke(fix_cmd)
             elif action and "check" in action:
-                ctx.invoke(check)
+                ctx.invoke(check_cmd)
             elif action and "on" in action:
                 ctx.invoke(on_cmd)
             elif action and "theme" in action:
@@ -84,13 +84,13 @@ def main(ctx):
             pass
 
 # ---------------------------------------------------------------------------
-# COMMAND: INIT
+# COMMAND: ON (Enable Lumina in Workspace)
 # ---------------------------------------------------------------------------
-@main.command()
-@click.option("--theme", "-t", default=None, help="Theme ID (linear-dark, apple-clean, vercel-mono, stripe-saas, cyber-tactile)")
+@main.command(name="on")
+@click.option("--theme", "-t", default=None, help="Theme ID (e.g. obsidian-craft, industrial-machina, liquid-spatial)")
 @click.option("--force", "-f", is_flag=True, help="Force overwrite existing configurations")
-def init(theme, force):
-    """Initialize Lumina in the current workspace with AGY/Claude rules & theme tokens."""
+def on_cmd(theme, force):
+    """Enable Lumina in the current workspace with AGY/Claude rules & theme tokens."""
     print_banner("Project Scaffolding & AI Rule Injection")
 
     selected_theme_id = theme
@@ -242,12 +242,12 @@ def add(component):
     ))
 
 # ---------------------------------------------------------------------------
-# COMMAND: AUDIT
+# COMMAND: CHECK (Scan & Calculate Design Quality Score)
 # ---------------------------------------------------------------------------
-@main.command()
+@main.command(name="check")
 @click.option("--path", "-p", default=".", help="Directory to scan")
-def audit(path):
-    """Scan workspace for AI-slop anti-patterns & generate an AI refactoring prompt."""
+def check_cmd(path):
+    """Scan workspace for AI-slop anti-patterns & calculate 0-100 design quality score."""
     print_banner("AI-Slop Codebase Auditor")
 
     auditor = DesignAuditor(path)
@@ -328,10 +328,10 @@ def rules():
         console.print(f"  • [cyan]{f}[/cyan]")
 
 # ---------------------------------------------------------------------------
-# COMMAND: SHOWCASE
+# COMMAND: VIEW (Launch Live Showcase in Browser)
 # ---------------------------------------------------------------------------
-@main.command()
-def showcase():
+@main.command(name="view")
+def view_cmd():
     """Launch the interactive live HTML5 showcase in your browser."""
     print_banner("Launching Interactive Showcase")
     showcase_path = Path(__file__).parent.parent / "showcase" / "index.html"
@@ -342,12 +342,12 @@ def showcase():
         console.print("[red]Showcase file not found.[/red]")
 
 # ---------------------------------------------------------------------------
-# COMMAND: POLISH (Automated Codebase Refactoring & Slop Removal)
+# COMMAND: FIX (Automated Codebase Refactoring & Slop Removal)
 # ---------------------------------------------------------------------------
-@main.command()
+@main.command(name="fix")
 @click.option("--path", "-p", default=".", help="Directory to polish")
 @click.option("--dry-run", is_flag=True, help="Preview changes without saving to disk")
-def polish(path, dry_run):
+def fix_cmd(path, dry_run):
     """Scan and automatically refactor AI-slop into Apple/Linear design standards."""
     print_banner("Lumina Code Polisher // Automated Refactor")
 
@@ -392,11 +392,11 @@ def mcp():
     run_mcp()
 
 # ---------------------------------------------------------------------------
-# COMMAND: CLEAN / EJECT (Trace-Free Complete Uninstallation)
+# COMMAND: OFF (Trace-Free Complete Uninstallation)
 # ---------------------------------------------------------------------------
-@main.command(name="clean")
+@main.command(name="off")
 @click.option("--force", "-f", is_flag=True, help="Skip confirmation prompt")
-def clean(force):
+def off_cmd(force):
     """Remove all Lumina rules, tokens, and configs without leaving any trace."""
     import shutil
     print_banner("Trace-Free Uninstaller & Eject Engine")
@@ -474,51 +474,6 @@ def clean(force):
         ))
     else:
         console.print("[yellow]No Lumina artifacts or configurations found in this directory.[/yellow]")
-
-@main.command(name="eject")
-@click.pass_context
-def eject(ctx):
-    """Alias for 'clean' command."""
-    ctx.invoke(clean)
-
-# ===========================================================================
-# SIMPLIFIED PRIMARY COMMANDS (The 4 Core Flagship Verbs)
-# ===========================================================================
-@main.command(name="on")
-@click.option("--theme", "-t", default=None, help="Theme ID")
-@click.option("--force", "-f", is_flag=True, help="Force overwrite")
-@click.pass_context
-def on_cmd(ctx, theme, force):
-    """[Flagship] Enable Lumina in project (inject rules & tokens)."""
-    ctx.invoke(init, theme=theme, force=force)
-
-@main.command(name="fix")
-@click.option("--path", "-p", default=".", help="Directory to polish")
-@click.option("--dry-run", is_flag=True, help="Preview changes without saving")
-@click.pass_context
-def fix(ctx, path, dry_run):
-    """[Flagship] Auto-fix and polish all AI-slop in codebase."""
-    ctx.invoke(polish, path=path, dry_run=dry_run)
-
-@main.command(name="check")
-@click.option("--path", "-p", default=".", help="Directory to scan")
-@click.pass_context
-def check(ctx, path):
-    """[Flagship] Check codebase for design defects (0-100 score)."""
-    ctx.invoke(audit, path=path)
-
-@main.command(name="off")
-@click.option("--force", "-f", is_flag=True, help="Skip confirmation")
-@click.pass_context
-def off_cmd(ctx, force):
-    """[Flagship] Turn off Lumina and clean all traces completely."""
-    ctx.invoke(clean, force=force)
-
-@main.command(name="view")
-@click.pass_context
-def view_cmd(ctx):
-    """[Flagship] Launch interactive live showcase in browser."""
-    ctx.invoke(showcase)
 
 if __name__ == "__main__":
     main()

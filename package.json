@@ -7,9 +7,13 @@
     "lumina": "./bin/cli.js"
   },
   "scripts": {
-    "polish": "node bin/cli.js polish",
-    "audit": "node bin/cli.js audit",
-    "init": "node bin/cli.js init",
+    "on": "node bin/cli.js on",
+    "fix": "node bin/cli.js fix",
+    "check": "node bin/cli.js check",
+    "off": "node bin/cli.js off",
+    "theme": "node bin/cli.js theme",
+    "view": "node bin/cli.js view",
+    "add": "node bin/cli.js add",
     "mcp": "node bin/cli.js mcp"
   },
   "keywords": [
