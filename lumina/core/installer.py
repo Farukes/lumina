@@ -17,7 +17,7 @@ from rich.table import Table
 
 console = Console()
 
-GITHUB_REPO = "omere/lumina"  # Default repository
+GITHUB_REPO = "Farukes/lumina"  # Default repository
 LUMINA_HOME = Path.home() / ".lumina"
 LUMINA_BIN = LUMINA_HOME / "bin"
 

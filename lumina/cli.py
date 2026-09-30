@@ -489,7 +489,7 @@ def off_cmd(force):
 # COMMAND: INSTALL (Download and Install Globally from GitHub)
 # ---------------------------------------------------------------------------
 @main.command(name="install")
-@click.option("--repo", "-r", default="omere/lumina", help="GitHub repository (user/repo)")
+@click.option("--repo", "-r", default="Farukes/lumina", help="GitHub repository (user/repo)")
 @click.option("--branch", "-b", default="main", help="Git branch")
 def install_cmd(repo, branch):
     """Download and install Lumina globally to your computer from GitHub."""

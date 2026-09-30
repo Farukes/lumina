@@ -4,7 +4,7 @@ Lumina One-Line Global Installer
 Usage:
   python install.py
 Or from web:
-  python -c "import urllib.request; exec(urllib.request.urlopen('https://raw.githubusercontent.com/omere/lumina/main/install.py').read())"
+  python -c "import urllib.request; exec(urllib.request.urlopen('https://raw.githubusercontent.com/Farukes/lumina/main/install.py').read())"
 """
 
 import os
@@ -16,7 +16,7 @@ import zipfile
 import io
 from pathlib import Path
 
-REPO = "omere/lumina"
+REPO = "Farukes/lumina"
 BRANCH = "main"
 LUMINA_HOME = Path.home() / ".lumina"
 LUMINA_BIN = LUMINA_HOME / "bin"

@@ -11,12 +11,12 @@ Lumina'yı bilgisayarınıza **tek satırla** kurabilir ve her terminalden doğr
 
 ### Windows (PowerShell):
 ```powershell
-irm https://raw.githubusercontent.com/omere/lumina/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/Farukes/lumina/main/install.ps1 | iex
 ```
 
 ### Python İle (Windows / macOS / Linux):
 ```bash
-python -c "import urllib.request; exec(urllib.request.urlopen('https://raw.githubusercontent.com/omere/lumina/main/install.py').read())"
+python -c "import urllib.request; exec(urllib.request.urlopen('https://raw.githubusercontent.com/Farukes/lumina/main/install.py').read())"
 ```
 *(Veya repoyu indirip doğrudan `python install.py` çalıştırabilirsiniz).*
 

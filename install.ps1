@@ -1,6 +1,6 @@
 # Lumina Windows PowerShell One-Liner Installer
 # Usage:
-#   irm https://raw.githubusercontent.com/omere/lumina/main/install.ps1 | iex
+#   irm https://raw.githubusercontent.com/Farukes/lumina/main/install.ps1 | iex
 
 Write-Host "⚡ LUMINA WINDOWS INSTALLER // WORLD-CLASS FRONTEND ENGINE" -ForegroundColor Cyan
 Write-Host "==========================================================" -ForegroundColor DarkGray
@@ -11,7 +11,7 @@ if (-not $PythonCmd) {
     exit 1
 }
 
-$InstallScriptUrl = "https://raw.githubusercontent.com/omere/lumina/main/install.py"
+$InstallScriptUrl = "https://raw.githubusercontent.com/Farukes/lumina/main/install.py"
 $TempScript = [System.IO.Path]::GetTempFileName() + ".py"
 
 try {
