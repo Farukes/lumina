@@ -143,7 +143,15 @@ class DesignAuditor:
 
         rel_path = str(file_path.relative_to(self.root_dir))
 
+        in_pre = False
         for line_idx, line in enumerate(lines, start=1):
+            if "<pre" in line:
+                in_pre = True
+            if in_pre:
+                if "</pre>" in line:
+                    in_pre = False
+                continue
+
             for rule in self.RULES:
                 if rule["pattern"].search(line):
                     issues.append(AuditIssue(
