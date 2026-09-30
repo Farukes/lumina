@@ -1,96 +1,130 @@
-# ⚡ LUMINA — World-Class Generative Frontend Engine
+<div align="center">
 
-> **Minimalist, Autonomous & Zero-Trace Design System for AI-Assisted Developers (Antigravity & Claude Code)**
-> *Linear · Apple · Vercel · Stripe · Teenage Engineering Grade Standards*
+# ⚡ LUMINA
+### The Generative Frontend Engine & Automated MCP for AI Developers
+**Linear · Apple · Vercel · Stripe · Teenage Engineering Tier Standards**
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-cyan.svg?style=flat-square)](https://python.org)
+[![MCP Compatible](https://img.shields.io/badge/MCP-Model_Context_Protocol-purple.svg?style=flat-square)](https://modelcontextprotocol.io)
+[![Zero Trace](https://img.shields.io/badge/Zero--Trace-Uninstaller-emerald.svg?style=flat-square)](#-iz-bırakmadan-kaldırma-zero-trace)
+[![Design Standard](https://img.shields.io/badge/Standard-Tier_S_Luxury-orange.svg?style=flat-square)](#-9-lüks-tasarım-arketipi)
+
+<br/>
+
+> **Lumina**, Antigravity (AGY) ve Claude Code ile kod yazarken yapay zekanın ürettiği bayat şablonları (**mor gradyanlar, düz karanlık kartlar, çiğ fontlar**) yok eden; projenize **Linear, Apple ve Stripe kalitesinde yaşayan tasarım DNA'sı** kazandıran otonom tasarım motorudur.
 
 ---
 
-## ⚡ Hızlı Kurulum (GitHub Üzerinden Tek Satırda)
+</div>
 
-Lumina'yı bilgisayarınıza **tek satırla** kurabilir ve her terminalden doğrudan `lumina` yazarak kullanabilirsiniz:
+## ⚡ Hızlı Kurulum (Global)
 
-### Windows (PowerShell):
+Lumina'yı bilgisayarınıza **tek satırla** kurun. Kurulum motoru; global CLI komutunu, PATH ortam değişkenini ve **Antigravity / Claude MCP sunucusunu otomatik olarak yapılandırır.**
+
+### 🪟 Windows (PowerShell - Önerilen)
 ```powershell
 irm https://raw.githubusercontent.com/Farukes/lumina/main/install.ps1 | iex
 ```
 
-### Python İle (Windows / macOS / Linux):
+### 🐍 Python İle (Windows / macOS / Linux)
 ```bash
 python -c "import urllib.request; exec(urllib.request.urlopen('https://raw.githubusercontent.com/Farukes/lumina/main/install.py').read())"
 ```
-*(Veya repoyu indirip doğrudan `python install.py` çalıştırabilirsiniz).*
+
+### 📦 Alternatif: Repodan Doğrudan Kurulum
+```bash
+git clone https://github.com/Farukes/lumina.git
+cd lumina
+python install.py
+```
+
+> **Kurulum Ne Yapar?**
+> 1. Motoru `~/.lumina/engine` dizinine yerleştirir.
+> 2. `lumina` komutunu sistem PATH'ine ekler (artık her terminalde `lumina` yazabilirsiniz).
+> 3. Antigravity (`~/.gemini/config/mcp_config.json`) ve Claude ayarlarına **Lumina MCP sunucusunu otomatik tanıtır** (sizdeki `tokenjar` veya diğer MCP'lere asla dokunulmaz).
 
 ---
 
-## 🗑️ İz Bırakmadan Kaldırma (Zero-Trace Uninstall)
+## 🎮 Temel Komutlar (Sade & Sezgisel)
 
-Lumina sisteminize bağımlılık veya arka plan hizmeti yüklemez, Windows Registry'e yazmaz. Bilgisayarınızdan tamamen silmek istediğinizde:
+Lumina, kafa karıştırıcı parametreler yerine geliştirici odaklı **4 temel eylem** sunar:
 
+| Komut | Eylem | Açıklama |
+| :--- | :---: | :--- |
+| **`lumina`** | 🎮 | **İnteraktif Kontrol Paneli**: Ok tuşlarıyla tüm işlemleri terminalden görsel olarak yönetin. |
+| **`lumina on`** | 🚀 | **Projeye Enjekte Et**: Lüks tasarım anayasasını (`GEMINI.md`, `.agents/rules`) ve CSS tokenlarını enjekte eder. |
+| **`lumina fix`** | ✨ | **Kodu Parlat**: Kod tabanındaki tüm mor gradyan, eksik pah ve kötü font hatalarını otomatik refactor eder. |
+| **`lumina check`** | 🔍 | **Kalite Skoru**: Kod tabanınızı tarar ve 0-100 arası lüks tasarım skoru hesaplar. |
+| **`lumina off`** | 🧹 | **Projeden Çıkart**: Lumina kurallarını ve tokenlarını mevcut projeden iz bırakmadan temizler. |
+
+### 🛠️ Hızlı Yardımcılar
+* `lumina theme` $\rightarrow$ 9 özgün lüks arketip arasında geçiş yapın.
+* `lumina view` $\rightarrow$ Canlı interaktif vitrini (showcase) tarayıcınızda açın.
+* `lumina add <blok>` $\rightarrow$ AAA kalitede yaşayan blok ekleyin (`bento-grid`, `command-bar`, `floating-dock`, `glow-hero` vb.).
+* `lumina mcp` $\rightarrow$ Model Context Protocol stdio sunucusunu başlatır (veya `lumina mcp -i` ile yeniden kaydeder).
+
+---
+
+## 🧠 Akıllı Asistan Tespiti (Sıfır Çöp Dosya)
+
+Lumina, geliştiricinin bilgisayarındaki araçları otomatik olarak tarar:
+* **Yalnızca Antigravity (AGY) kuruluysa:** Sadece `GEMINI.md` ve `.agents/rules` dosyaları oluşturulur. Bilgisayarınızda bulunmayan Claude Code için **`CLAUDE.md` veya `.claude/` gibi gereksiz çöp dosyalar ASLA açılmaz.**
+* **Claude Code kuruluysa:** Claude Code uyumlu direktifler eklenir.
+* Manuel seçim yapmak isterseniz:
+  ```bash
+  lumina on --ai agy      # Sadece Antigravity için
+  lumina on --ai claude   # Sadece Claude Code için
+  lumina on --ai both     # Her ikisi için
+  ```
+
+---
+
+## 🎨 9 Lüks Tasarım Arketipi
+
+Lumina, telif haklarından arındırılmış 9 özgün tasarım arketipi ile yapay zekanın halüsinasyon görmesini engeller:
+
+1. **`obsidian-craft` (Linear Standartı):** Derin obsidyen zemin (`#09090b`), 1px iç metalik pah yansıması (`border-white/[0.08]`), zümrüt aksanlar.
+2. **`industrial-machina` (Teenage Engineering):** Mat gri gövde (`#18181b`), dot-matrix telemetri, mekanik Safety Orange (`#ff4400`) tetikleyiciler.
+3. **`liquid-spatial` (visionOS):** Çok katmanlı cam difüzyonu (`backdrop-blur-2xl`), üst kenar ışık kırılması (`border-t-white/40`), akışkan yay fiziği.
+4. **`parchment-editorial` (Stripe Press):** Sıcak ham kağıt dokusu (`#fbf9f5`), Newsreader editoryal serif tipografi, 0.5px razor çizgiler.
+5. **`stark-monolith` (Vercel Minimalizmi):** Keskin monokrom disiplini, Geist font eşleşmesi, 0.5px ultra-ince çerçeveler.
+6. **`fintech-horizon` (Stripe SaaS):** Lacivert derinlik, mesh aurora ışıması, yumuşak izometrik derinlik.
+7. **`amber-terminal` (Raycast Cyber):** Kehribar fosfor ışıması (`#f59e0b`), monospace telemetri, klavye-öncelikli kontrol.
+8. **`pure-cupertino` (Apple Clean):** Pürüzsüz squircle köşeler, ferah negatif boşluk, multi-tier cam morfolojisi.
+9. **`refined-brutalism`:** 2px net mürekkep kenarlıklar, 3px sıfır-bulanıklık sert gölgeler, asit yeşil aksanlar.
+
+---
+
+## 🤖 Model Context Protocol (MCP) Yetenekleri
+
+Lumina, LLM'in yaratıcılığını robotlaştırmadan ona ilham veren 5 zeki MCP aracına sahiptir:
+
+* **`synthesize_design_tokens`**: Seçilen arketipe ve yoğunluğa göre dinamik OKLCH renkleri, pah gölgeleri ve yay fizikleri üretir.
+* **`get_composition_grammar`**: Kopyala-yapıştır kod vermek yerine yapay zekaya görsel hiyerarşi, asimetri kuralları ve ASCII wireframe rehberliği sunar.
+* **`get_visual_primitive`**: Border Beam, Spotlight Follow, 3D Tilt ve Text Scramble gibi saf matematiksel efektleri döner.
+* **`get_component_blueprint`**: Canlı telemetrili Bento Grid ve Raycast Cmd+K gibi 8 adet AAA blok sağlar.
+* **`critique_ui_design`**: Yazılan kodu Baş Tasarımcı gözüyle denetler ve puanlar.
+
+---
+
+## 🗑️ İz Bırakmadan Kaldırma (Zero-Trace)
+
+Lumina sisteminize asla kalıcı bağımlılıklar yüklemez, Windows Registry'e yazmaz ve arka planda çalışan daemon barındırmaz.
+
+Kaldırmak istediğinizde tek komut yeterlidir:
 ```bash
 lumina uninstall
 ```
-> **Sonuç:** `~/.lumina` klasörü, PATH değişkeni, geçici raporlar ve tüm proje kuralları anında silinir. Sisteminizde 0 bayt artık kalır.
+
+**Temizlik Garantisi:**
+* `~/.lumina` dizini tamamen silinir.
+* Windows / Unix `PATH` ortam değişkeninden `lumina` çıkarılır.
+* `mcp_config.json` dosyasından yalnızca `"lumina"` silinir (**diğer tüm MCP'leriniz aynen korunur**).
+* Sisteminizde **0 bayt ve 0 iz** bırakır.
 
 ---
 
-## 🎮 Sadeleştirilmiş Temel Komutlar
+## 📄 Lisans
 
-Lumina'da kafa karıştırıcı onlarca alt komut yerine **4 temel komut** bulunur:
-
-| Komut | Açıklama |
-| :--- | :--- |
-| **`lumina`** | İnteraktif kontrol panelini açar (ok tuşlarıyla seçim yapın). |
-| **`lumina on`** | Projenize lüks tasarım kurallarını ve CSS değişkenlerini enjekte eder. |
-| **`lumina fix`** | Kodunuzdaki tüm AI-slop (mor gradyan, eksik pah vb.) hatalarını otomatik düzeltir. |
-| **`lumina check`** | Kod tabanını tarar, 0-100 arası tasarım kalitesi puanı verir. |
-| **`lumina off`** | Lumina'yı mevcut projeden iz bırakmadan temizler. |
-
-### Hızlı Yardımcılar:
-* **`lumina theme`**: 9 lüks arketip arasında geçiş yapın (`obsidian-craft`, `industrial-machina`, `liquid-spatial`, `parchment-editorial`, `stark-monolith`, `fintech-horizon`, `amber-terminal`, `pure-cupertino`, `refined-brutalism`).
-* **`lumina view`**: İnteraktif tasarım vitrinini tarayıcınızda açar.
-* **`lumina add <blok>`**: AAA kalitesinde hazır blok kopyalar (`bento-grid`, `command-bar`, `floating-dock`, `glow-hero` vb.).
-* **`lumina mcp`**: Antigravity veya Claude Code için stdio Model Context Protocol sunucusunu başlatır.
-
----
-
-## 🧠 Model Context Protocol (MCP) Kurulumu
-
-Antigravity CLI veya Claude Code ayarlarınıza (`agy.json` veya `claude_desktop_config.json`) ekleyin:
-
-```json
-{
-  "mcpServers": {
-    "lumina": {
-      "command": "lumina",
-      "args": ["mcp"]
-    }
-  }
-}
-```
-
----
-
-## 📦 Proje Yapısı
-
-```
-lumina/
-├── install.py             # Global Python kurulum betiği
-├── install.ps1            # Windows tek satır PowerShell kurucu
-├── lumina/
-│   ├── cli.py             # Click & Rich CLI motoru
-│   └── core/
-│       ├── installer.py   # Global kurulum ve iz bırakmayan kaldırma motoru
-│       ├── auditor.py     # AI-slop tarayıcı ve puanlayıcı
-│       ├── polisher.py    # Otomatik kod parlatıcı ve dönüştürücü
-│       ├── themes.py      # 9 adet özgün lüks tasarım arketipi
-│       ├── registry.py    # AAA bileşen şablonları
-│       └── rules_generator.py # AGY & Claude kural enjektörü
-├── mcp/
-│   └── server.py          # Model Context Protocol stdio sunucusu
-├── components/blocks/     # Hazır UI bileşenleri
-└── showcase/              # Canlı interaktif tasarım vitrini
-```
-
----
-
-**Lumina** — Karmaşa yok, arka plan süreci yok. Saf hız, sıfır iz ve dünya zirvesinde tasarım kalitesi.
+Bu proje [MIT Lisansı](LICENSE) kapsamında açık kaynak olarak geliştirilmektedir. Ticari ve kişisel projelerde özgürce kullanılabilir.
