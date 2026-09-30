@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KRONOS OS // Autonomous Agent Neural Control Plane</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* ==========================================================================
+       LUMINA DESIGN SYSTEM - THEME CSS VARIABLES
+       ========================================================================== */
+    :root {
+      /* Default Archetype: Obsidian Linear */
+      --bg: #09090b;
+      --card-bg: #121215;
+      --border: rgba(255, 255, 255, 0.08);
+      --chamfer: inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+      --card-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.7);
+      --primary: #10b981;
+      --primary-glow: rgba(16, 185, 129, 0.25);
+      --primary-fg: #042f2e;
+      --text-main: #f4f4f5;
+      --text-muted: #a1a1aa;
+      --font-display: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --radius: 1rem;
+      --beam-from: #10b981;
+      --beam-to: #06b6d4;
+      --card-border-width: 1px;
+    }
+
+    /* 1. Teenage Industrial Archetype */
+    [data-theme="teenage"] {
+      --bg: #121214;
+      --card-bg: #1a1a1e;
+      --border: rgba(255, 255, 255, 0.12);
+      --chamfer: inset 0 1px 0 0 rgba(255, 255, 255, 0.15), 0 2px 0 0 rgba(0, 0, 0, 0.8);
+      --card-shadow: 0 8px 30px rgba(0, 0, 0, 0.9);
+      --primary: #ff4400;
+      --primary-glow: rgba(255, 68, 0, 0.35);
+      --primary-fg: #ffffff;
+      --text-main: #e4e4e7;
+      --text-muted: #71717a;
+      --font-display: 'JetBrains Mono', monospace;
+      --font-mono: 'JetBrains Mono', monospace;
+      --radius: 0.25rem;
+      --beam-from: #ff4400;
+      --beam-to: #e2f952;
+      --card-border-width: 1px;
+    }
+
+    /* 2. Cupertino Spatial Glass Archetype */
+    [data-theme="spatial"] {
+      --bg: #050508;
+      --card-bg: rgba(255, 255, 255, 0.04);
+      --border: rgba(255, 255, 255, 0.12);
+      --chamfer: inset 0 1px 0 0 rgba(255, 255, 255, 0.4), inset 0 0 1px 0 rgba(255, 255, 255, 0.3);
+      --card-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.8);
+      --primary: #38bdf8;
+      --primary-glow: rgba(56, 189, 248, 0.35);
+      --primary-fg: #030712;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --font-display: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      --font-mono: 'Geist Mono', monospace;
+      --radius: 1.5rem;
+      --beam-from: #38bdf8;
+      --beam-to: #818cf8;
+      --card-border-width: 1px;
+    }
+
+    /* 3. Refined Neo-Brutalism Archetype */
+    [data-theme="brutalist"] {
+      --bg: #09090b;
+      --card-bg: #18181b;
+      --border: #ffffff;
+      --chamfer: none;
+      --card-shadow: 4px 4px 0 0 #bef264;
+      --primary: #bef264;
+      --primary-glow: rgba(190, 242, 100, 0.3);
+      --primary-fg: #09090b;
+      --text-main: #f4f4f5;
+      --text-muted: #a1a1aa;
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-mono: 'Space Grotesk', monospace;
+      --radius: 0.375rem;
+      --beam-from: #bef264;
+      --beam-to: #ffffff;
+      --card-border-width: 2px;
+    }
+
+    /* 4. Stripe Editorial Luxury Archetype */
+    [data-theme="editorial"] {
+      --bg: #fbf9f5;
+      --card-bg: #ffffff;
+      --border: #e7e2d7;
+      --chamfer: none;
+      --card-shadow: 0 2px 10px rgba(0, 0, 0, 0.04), 0 10px 30px rgba(0, 0, 0, 0.02);
+      --primary: #1c1917;
+      --primary-glow: rgba(28, 25, 23, 0.15);
+      --primary-fg: #fbf9f5;
+      --text-main: #1c1917;
+      --text-muted: #78716c;
+      --font-display: 'Newsreader', Georgia, serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --radius: 0.375rem;
+      --beam-from: #1c1917;
+      --beam-to: #78716c;
+      --card-border-width: 1px;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      font-family: var(--font-display);
+      transition: background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .font-code {
+      font-family: var(--font-mono);
+    }
+
+    /* Lumina Surface Primitive */
+    .lumina-card {
+      background-color: var(--card-bg);
+      border-width: var(--card-border-width);
+      border-style: solid;
+      border-color: var(--border);
+      box-shadow: var(--chamfer), var(--card-shadow);
+      border-radius: var(--radius);
+      position: relative;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .lumina-card:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    [data-theme="editorial"] .lumina-card:hover {
+      border-color: rgba(0, 0, 0, 0.25);
+    }
+
+    /* Border Beam Animation */
+    @keyframes borderBeamRotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .border-beam-ring {
+      position: absolute;
+      inset: -1.5px;
+      border-radius: inherit;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .border-beam-ring::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(from 0deg, transparent 0deg 300deg, var(--beam-from) 340deg, var(--beam-to) 360deg);
+      animation: borderBeamRotate 6s linear infinite;
+    }
+
+    .border-beam-inner {
+      position: absolute;
+      inset: var(--card-border-width);
+      background-color: var(--card-bg);
+      border-radius: inherit;
+      z-index: 1;
+    }
+
+    /* Dot Matrix Background for Industrial Theme */
+    .dot-matrix {
+      background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+      background-size: 16px 16px;
+    }
+
+    [data-theme="editorial"] .dot-matrix {
+      background-image: radial-gradient(rgba(0, 0, 0, 0.06) 1px, transparent 1px);
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="min-h-screen selection:bg-emerald-500/30 selection:text-white pb-24 overflow-x-hidden dot-matrix">
+
+  <!-- Ambient Glow Bloom -->
+  <div id="ambient-bloom" class="fixed top-12 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-emerald-500/10 blur-[140px] rounded-full pointer-events-none -z-10 transition-all duration-700"></div>
+
+  <!-- ========================================================================
+       TOP NAVIGATION BAR
+       ======================================================================== -->
+  <header class="sticky top-4 z-40 max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="lumina-card px-4 py-3 flex items-center justify-between backdrop-blur-xl">
+      
+      <!-- Brand & Project Identity -->
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl flex items-center justify-center font-code font-bold text-xs" style="background: var(--primary); color: var(--primary-fg);">
+          KR
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-sm font-bold tracking-tight">KRONOS AI</span>
+            <span class="font-code text-[10px] px-2 py-0.5 rounded uppercase tracking-wider bg-white/10 text-neutral-300">v2.4 Neural</span>
+          </div>
+          <span class="hidden sm:block text-[11px] opacity-60">Autonomous Agent Control Plane</span>
+        </div>
+      </div>
+
+      <!-- Archetype Switcher Pills (5 Luxury Archetypes) -->
+      <div class="hidden md:flex items-center gap-1 p-1 rounded-xl bg-black/30 border border-white/[0.08] text-xs font-code">
+        <button onclick="switchTheme('linear')" id="btn-linear" class="archetype-pill px-3 py-1.5 rounded-lg transition-all active:scale-[0.98] bg-white/15 text-white font-medium">Linear</button>
+        <button onclick="switchTheme('teenage')" id="btn-teenage" class="archetype-pill px-3 py-1.5 rounded-lg transition-all active:scale-[0.98] opacity-60 hover:opacity-100">Teenage Synth</button>
+        <button onclick="switchTheme('spatial')" id="btn-spatial" class="archetype-pill px-3 py-1.5 rounded-lg transition-all active:scale-[0.98] opacity-60 hover:opacity-100">Spatial Glass</button>
+        <button onclick="switchTheme('brutalist')" id="btn-brutalist" class="archetype-pill px-3 py-1.5 rounded-lg transition-all active:scale-[0.98] opacity-60 hover:opacity-100">Neo-Brutal</button>
+        <button onclick="switchTheme('editorial')" id="btn-editorial" class="archetype-pill px-3 py-1.5 rounded-lg transition-all active:scale-[0.98] opacity-60 hover:opacity-100">Editorial</button>
+      </div>
+
+      <!-- Audio Haptics & Shortcut Search Trigger -->
+      <div class="flex items-center gap-2">
+        <button onclick="toggleHaptics()" id="haptic-toggle-btn" class="p-2 rounded-xl border border-white/10 hover:border-white/20 active:scale-[0.98] transition-all" title="Toggle Synthetic Web Audio Haptics">
+          <i data-lucide="volume-2" class="w-4 h-4 text-emerald-400" id="haptic-icon"></i>
+        </button>
+
+        <button onclick="openCommandModal()" class="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-white/10 hover:border-white/20 text-xs opacity-75 hover:opacity-100 active:scale-[0.98] transition-all">
+          <i data-lucide="command" class="w-3.5 h-3.5"></i>
+          <span>Cmd+K</span>
+          <kbd class="font-code text-[10px] px-1 py-0.5 rounded bg-white/10 border border-white/10">⌘K</kbd>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       MAIN HERO ANNOUNCEMENT & TELEMETRY STRIP
+       ======================================================================== -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 mt-8 space-y-8">
+
+    <!-- Status Strip with Realtime Pulse -->
+    <div class="flex flex-wrap items-center justify-between gap-4 py-2 border-b border-white/[0.08]">
+      <div class="flex items-center gap-3">
+        <span class="relative flex h-2.5 w-2.5">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style="background-color: var(--primary);"></span>
+          <span class="relative inline-flex rounded-full h-2.5 w-2.5" style="background-color: var(--primary);"></span>
+        </span>
+        <span class="font-code text-xs tracking-wider uppercase opacity-80">CLUSTER NODE: <span class="font-bold text-white">ORBIT-WEST-01</span></span>
+        <span class="opacity-30">•</span>
+        <span class="font-code text-xs opacity-60">LATENCY: <span id="telemetry-latency" class="text-white font-medium">9.4 ms</span></span>
+      </div>
+
+      <div class="flex items-center gap-4 text-xs font-code opacity-75">
+        <div>ACTIVE THREADS: <span class="font-bold text-white">128 AGENTS</span></div>
+        <span class="opacity-30">•</span>
+        <div>MEMORY: <span class="font-bold text-white">4.8 GB / 16 GB</span></div>
+        <span class="opacity-30">•</span>
+        <button onclick="triggerTurboPulse()" class="hover:underline flex items-center gap-1 active:scale-[0.98]" style="color: var(--primary);">
+          <i data-lucide="zap" class="w-3 h-3"></i> Turbo Sync
+        </button>
+      </div>
+    </div>
+
+    <!-- ========================================================================
+         ASYMMETRIC LIVING BENTO GRID (The Core Lumina Pattern)
+         Dominant Visual Anchor (60% weight) + Satellites + Micro-Controls
+         ======================================================================== -->
+    <div class="grid grid-cols-12 gap-6">
+
+      <!-- ====================================================================
+           CARD 1: DOMINANT VISUAL ANCHOR (Span: col-span-12 lg:col-span-8)
+           Interactive 60FPS Living Neural Canvas & Real-time Inference Wave
+           ==================================================================== -->
+      <div class="col-span-12 lg:col-span-8 lumina-card p-6 overflow-hidden relative group">
+        <!-- Conic Border Beam Orbit -->
+        <div class="border-beam-ring"><div class="border-beam-inner"></div></div>
+
+        <div class="relative z-10 flex flex-col h-full justify-between">
+          <!-- Card Header -->
+          <div class="flex items-center justify-between pb-4 border-b border-white/[0.06]">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="font-code text-[11px] uppercase tracking-widest px-2 py-0.5 rounded bg-white/10 opacity-75">Visual Anchor // 60% Weight</span>
+                <span class="font-code text-[11px] text-emerald-400">● LIVE RUNNER</span>
+              </div>
+              <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-white mt-1">Neural Vector Mesh Simulation</h2>
+            </div>
+            
+            <!-- Micro Waveform Parameter Buttons -->
+            <div class="flex items-center gap-1.5 font-code text-xs">
+              <button onclick="setWaveMode('harmonic')" class="px-2.5 py-1 rounded-lg border border-white/10 hover:border-white/20 active:scale-[0.98] transition-all bg-white/5 text-white">Harmonic</button>
+              <button onclick="setWaveMode('quantum')" class="px-2.5 py-1 rounded-lg border border-white/10 hover:border-white/20 active:scale-[0.98] transition-all opacity-60 hover:opacity-100">Quantum</button>
+              <button onclick="setWaveMode('pulse')" class="px-2.5 py-1 rounded-lg border border-white/10 hover:border-white/20 active:scale-[0.98] transition-all opacity-60 hover:opacity-100">Pulse</button>
+            </div>
+          </div>
+
+          <!-- The Living HTML5 Interactive Canvas -->
+          <div class="relative my-4 rounded-xl overflow-hidden bg-black/40 border border-white/[0.04] aspect-[16/9] flex items-center justify-center">
+            <canvas id="neural-canvas" class="w-full h-full cursor-crosshair"></canvas>
+            
+            <!-- Floating Live Telemetry Overlay -->
+            <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between px-3 py-2 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 font-code text-[11px]">
+              <div class="flex items-center gap-2">
+                <i data-lucide="activity" class="w-3.5 h-3.5 text-emerald-400 animate-pulse"></i>
+                <span>THROUGHPUT: <span id="token-throughput" class="font-bold text-white">2,840 tokens/s</span></span>
+              </div>
+              <div class="flex items-center gap-3">
+                <span>EPOCH: <span class="text-white font-bold">#481</span></span>
+                <span>LOSS: <span class="text-emerald-400 font-bold">0.00142</span></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Card Controls & Monospace Explainer -->
+          <div class="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-white/[0.06] text-xs font-code opacity-80">
+            <p class="max-w-md opacity-70">
+              Interactive physics canvas rendered with WebGL precision. Hover or drag over the mesh to deform vector field vectors.
+            </p>
+            <div class="flex items-center gap-2">
+              <button onclick="resetMesh()" class="px-3 py-1.5 rounded-lg border border-white/10 hover:bg-white/5 active:scale-[0.98] transition-all">
+                Reset Vectors
+              </button>
+              <button onclick="synthesizeAgentRun()" class="px-4 py-1.5 rounded-lg font-semibold active:scale-[0.98] transition-all shadow-lg" style="background: var(--primary); color: var(--primary-fg);">
+                Dispatch Job
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====================================================================
+           CARD 2: SATELLITE TELEMETRY (Span: col-span-12 sm:col-span-6 lg:col-span-4)
+           Monospace Metrics, Live Ingestion Counters & Sparkline
+           ==================================================================== -->
+      <div class="col-span-12 sm:col-span-6 lg:col-span-4 lumina-card p-6 flex flex-col justify-between">
+        <div>
+          <!-- Header -->
+          <div class="flex items-center justify-between pb-3 border-b border-white/[0.06]">
+            <span class="font-code text-[11px] uppercase tracking-widest opacity-60">Context Satellite 01</span>
+            <i data-lucide="cpu" class="w-4 h-4 opacity-60"></i>
+          </div>
+
+          <!-- Metric Display -->
+          <div class="mt-4">
+            <span class="font-code text-xs uppercase tracking-wider opacity-60">Cumulative Tokens Ingested</span>
+            <div class="flex items-baseline gap-2 mt-1">
+              <h3 id="cumulative-tokens" class="text-3xl sm:text-4xl font-extrabold font-code tracking-tight text-white">41,289,140</h3>
+            </div>
+            <div class="flex items-center gap-1.5 mt-2 font-code text-xs text-emerald-400">
+              <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
+              <span>+18.4% vs previous cycle</span>
+            </div>
+          </div>
+
+          <!-- Micro Sparkline SVG -->
+          <div class="mt-6 p-3 rounded-xl bg-white/[0.02] border border-white/[0.06]">
+            <div class="flex items-center justify-between text-[10px] font-code opacity-60 mb-2">
+              <span>INFERENCE BURST (LAST 60S)</span>
+              <span class="text-emerald-400">PEAK: 3.8K/S</span>
+            </div>
+            <svg class="w-full h-12 stroke-emerald-400 fill-none" viewBox="0 0 100 30" preserveAspectRatio="none">
+              <path d="M0 25 Q 15 28, 25 15 T 50 18 T 75 8 T 100 12" stroke-width="2" stroke-linecap="round" />
+              <path d="M0 25 Q 15 28, 25 15 T 50 18 T 75 8 T 100 12 L 100 30 L 0 30 Z" fill="rgba(16, 185, 129, 0.08)" stroke="none" />
+            </svg>
+          </div>
+        </div>
+
+        <!-- Telemetry Key-Value Footers -->
+        <div class="pt-4 border-t border-white/[0.06] space-y-2 font-code text-xs">
+          <div class="flex justify-between">
+            <span class="opacity-60">Quantization</span>
+            <span class="font-bold text-white">FP8 TensorCore</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="opacity-60">Context Window</span>
+            <span class="font-bold text-white">1,048,576 tokens</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====================================================================
+           CARD 3: HARDWARE TACTILE CONTROLS (col-span-12 sm:col-span-6 lg:col-span-4)
+           Teenage Engineering-Inspired Hardware Switches & Segmented Sliders
+           ==================================================================== -->
+      <div class="col-span-12 sm:col-span-6 lg:col-span-4 lumina-card p-6 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between pb-3 border-b border-white/[0.06]">
+            <span class="font-code text-[11px] uppercase tracking-widest opacity-60">Tactile Micro-Control</span>
+            <span class="font-code text-[10px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">HAPTIC ENABLED</span>
+          </div>
+
+          <h3 class="text-lg font-bold tracking-tight text-white mt-3">Synthesizer Relay Matrix</h3>
+          <p class="text-xs opacity-60 mt-1 font-code">Hardware-calibrated mechanical toggles with synthetic Web Audio feedback.</p>
+
+          <!-- Control 1: Turbo Boost Toggle Switch -->
+          <div class="mt-6 flex items-center justify-between p-3 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+            <div>
+              <div class="text-xs font-bold text-white">Turbo Concurrency</div>
+              <div class="text-[11px] font-code opacity-50">Uncapped speculative execution</div>
+            </div>
+            <button onclick="toggleTurboSwitch()" id="turbo-toggle" class="w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-200 active:scale-[0.98]" style="background-color: var(--primary);">
+              <div id="turbo-knob" class="w-4 h-4 rounded-full bg-black shadow-md transform translate-x-6 transition-transform duration-200"></div>
+            </button>
+          </div>
+
+          <!-- Control 2: Frequency Harmonic Slider -->
+          <div class="mt-4 p-3 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+            <div class="flex items-center justify-between text-xs font-code mb-2">
+              <span class="opacity-60">HARMONIC BIAS</span>
+              <span id="slider-val" class="text-white font-bold">1.42 GHz</span>
+            </div>
+            <input type="range" min="1" max="100" value="72" oninput="handleSliderChange(this.value)" class="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-emerald-400">
+          </div>
+        </div>
+
+        <!-- Haptic Sound Tester Action Button -->
+        <div class="pt-4 border-t border-white/[0.06] flex items-center justify-between">
+          <span class="text-[11px] font-code opacity-60">CLICK CONFIRMATION</span>
+          <button onclick="playHapticClick(1400)" class="px-3 py-1 rounded-lg border border-white/15 hover:bg-white/10 font-code text-xs active:scale-[0.98] transition-all">
+            Test Click (<kbd>⌘T</kbd>)
+          </button>
+        </div>
+      </div>
+
+      <!-- ====================================================================
+           CARD 4: SUBAGENT FLEET STATUS (col-span-12 lg:col-span-8)
+           Interactive Fleet Table with Monospace Metadata & Instant Filter
+           ==================================================================== -->
+      <div class="col-span-12 lg:col-span-8 lumina-card p-6">
+        <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-white/[0.06]">
+          <div>
+            <span class="font-code text-[11px] uppercase tracking-widest opacity-60">Subagent Fleet Telemetry</span>
+            <h3 class="text-lg font-bold tracking-tight text-white mt-1">Autonomous Subagent Task Queue</h3>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <input type="text" id="agent-filter-input" oninput="filterAgents(this.value)" placeholder="Filter agents..." class="px-3 py-1.5 rounded-lg bg-black/40 border border-white/10 text-xs font-code placeholder-neutral-500 focus:outline-none focus:border-white/30 text-white w-40 sm:w-56">
+            <button onclick="spawnDemoSubagent()" class="px-3 py-1.5 rounded-lg border border-white/10 hover:bg-white/10 font-code text-xs active:scale-[0.98] transition-all flex items-center gap-1.5">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i> Spawn Agent
+            </button>
+          </div>
+        </div>
+
+        <!-- Fleet Table -->
+        <div class="mt-4 overflow-x-auto">
+          <table class="w-full text-left font-code text-xs">
+            <thead>
+              <tr class="text-neutral-500 border-b border-white/[0.04]">
+                <th class="py-2.5 font-normal">AGENT ID / ROLE</th>
+                <th class="py-2.5 font-normal">TASK WORKSPACE</th>
+                <th class="py-2.5 font-normal">CYCLE TIME</th>
+                <th class="py-2.5 font-normal text-right">STATE</th>
+              </tr>
+            </thead>
+            <tbody id="agent-table-body" class="divide-y divide-white/[0.04]">
+              <tr class="hover:bg-white/[0.02] transition-colors">
+                <td class="py-3 flex items-center gap-2.5">
+                  <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                  <div>
+                    <span class="font-semibold text-white">agent-01 // Research Architect</span>
+                    <div class="text-[10px] text-neutral-500">Model: Gemini 2.5 Pro</div>
+                  </div>
+                </td>
+                <td class="py-3 text-neutral-400">/analysis/market-scan</td>
+                <td class="py-3 text-neutral-300">142ms</td>
+                <td class="py-3 text-right">
+                  <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px]">EXECUTING</span>
+                </td>
+              </tr>
+              <tr class="hover:bg-white/[0.02] transition-colors">
+                <td class="py-3 flex items-center gap-2.5">
+                  <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                  <div>
+                    <span class="font-semibold text-white">agent-02 // Style AST Polisher</span>
+                    <div class="text-[10px] text-neutral-500">Model: Claude 3.7 Sonnet</div>
+                  </div>
+                </td>
+                <td class="py-3 text-neutral-400">/lumina/core/polisher</td>
+                <td class="py-3 text-neutral-300">38ms</td>
+                <td class="py-3 text-right">
+                  <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[10px]">IDLE WAITING</span>
+                </td>
+              </tr>
+              <tr class="hover:bg-white/[0.02] transition-colors">
+                <td class="py-3 flex items-center gap-2.5">
+                  <span class="w-2 h-2 rounded-full bg-sky-400"></span>
+                  <div>
+                    <span class="font-semibold text-white">agent-03 // Vector Search Synthesizer</span>
+                    <div class="text-[10px] text-neutral-500">Model: Claude 3.5 Haiku</div>
+                  </div>
+                </td>
+                <td class="py-3 text-neutral-400">/embeddings/chroma</td>
+                <td class="py-3 text-neutral-300">88ms</td>
+                <td class="py-3 text-right">
+                  <span class="px-2 py-0.5 rounded bg-sky-500/10 text-sky-400 border border-sky-500/20 text-[10px]">STREAMING</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ========================================================================
+         LUMINA CODE AUDITOR & SLOP REFUTATION SHOWCASE MODAL
+         ======================================================================== -->
+    <div class="lumina-card p-6 mt-12 bg-gradient-to-b from-white/[0.02] to-transparent">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <span class="font-code text-[11px] uppercase tracking-widest text-emerald-400">Design System Audit Engine</span>
+          <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-white mt-1">Why Lumina Code Outclasses Common AI-Slop</h2>
+          <p class="text-sm opacity-70 mt-1 max-w-2xl">
+            Lumina automatically detects and eliminates the 6 telltale flaws of novice AI code: purple gradients, 3-card symmetry, untracked typography, flat cards, and unreactive buttons.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button onclick="toggleDiffView()" id="diff-toggle-btn" class="px-4 py-2 rounded-xl border border-white/20 hover:bg-white/10 text-xs font-code active:scale-[0.98] transition-all">
+            Toggle Before / After Diff
+          </button>
+        </div>
+      </div>
+
+      <!-- Diff Comparison Card Container -->
+      <div id="diff-container" class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 font-code text-xs">
+        
+        <!-- Flawed AI Slop -->
+        <div class="p-4 rounded-xl border border-red-500/20 bg-red-950/10">
+          <div class="flex items-center justify-between text-red-400 font-bold pb-2 border-b border-red-500/20">
+            <span>❌ COMMON AI BOILERPLATE SLOP</span>
+            <span class="text-[10px]">GRADE: F (40/100)</span>
+          </div>
+          <pre class="mt-3 text-neutral-400 whitespace-pre-wrap leading-relaxed">
+&lt;button className="bg-gradient-to-r 
+  from-purple-500 to-indigo-600 
+  text-white px-6 py-3 rounded-lg 
+  hover:opacity-90"&gt;
+  Submit Form
+&lt;/button&gt;
+
+&lt;div className="bg-zinc-900 border 
+  border-zinc-800 p-6 rounded-lg"&gt;
+  &lt;h3 className="text-3xl text-white"&gt;Title&lt;/h3&gt;
+&lt;/div&gt;
+          </pre>
+        </div>
+
+        <!-- Lumina World-Class Tier -->
+        <div class="p-4 rounded-xl border border-emerald-500/20 bg-emerald-950/10">
+          <div class="flex items-center justify-between text-emerald-400 font-bold pb-2 border-b border-emerald-500/20">
+            <span>✔ LUMINA WORLD-CLASS CRAFT</span>
+            <span class="text-[10px]">GRADE: S (100/100)</span>
+          </div>
+          <pre class="mt-3 text-neutral-300 whitespace-pre-wrap leading-relaxed">
+&lt;button className="bg-white hover:bg-neutral-100 
+  text-neutral-950 font-semibold px-6 py-2.5 
+  rounded-xl shadow-[0_1px_2px_rgba(0,0,0,0.1),
+  inset_0_1px_0_rgba(255,255,255,0.8)] 
+  active:scale-[0.98] transition-all"&gt;
+  Submit Form
+&lt;/button&gt;
+
+&lt;div className="bg-zinc-950 border border-white/[0.08] 
+  shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] 
+  p-6 rounded-2xl"&gt;
+  &lt;h3 className="text-3xl tracking-tight text-white font-bold"&gt;Title&lt;/h3&gt;
+&lt;/div&gt;
+          </pre>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ========================================================================
+       COMMAND PALETTE MODAL (Cmd+K)
+       ======================================================================== -->
+  <div id="cmd-modal" class="hidden fixed inset-0 z-50 flex items-start justify-center pt-24 px-4 bg-black/70 backdrop-blur-md">
+    <div class="lumina-card w-full max-w-xl bg-neutral-950 border border-white/20 shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+      
+      <!-- Search Input Header -->
+      <div class="flex items-center px-4 py-3.5 border-b border-white/[0.08] gap-3">
+        <i data-lucide="search" class="w-4 h-4 text-neutral-500"></i>
+        <input type="text" id="cmd-input" placeholder="Type a command or switch theme..." class="w-full bg-transparent text-white text-sm font-code focus:outline-none placeholder-neutral-500">
+        <button onclick="closeCommandModal()" class="text-xs font-code text-neutral-500 hover:text-white px-1.5 py-0.5 rounded border border-white/[0.08] active:scale-[0.98]">ESC</button>
+      </div>
+
+      <!-- Action Items -->
+      <div class="p-2 space-y-1 font-code text-xs">
+        <div class="px-3 py-1.5 text-[10px] text-neutral-500 uppercase tracking-widest">Aesthetic Presets</div>
+        <div onclick="switchTheme('linear'); closeCommandModal();" class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-white/10 text-neutral-300 hover:text-white cursor-pointer">
+          <span>Obsidian Linear (B2B SaaS / Raycast)</span>
+          <kbd class="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[10px]">⌘1</kbd>
+        </div>
+        <div onclick="switchTheme('teenage'); closeCommandModal();" class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-white/10 text-neutral-300 hover:text-white cursor-pointer">
+          <span>Teenage Industrial (OP-1 Hardware / Orange)</span>
+          <kbd class="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[10px]">⌘2</kbd>
+        </div>
+        <div onclick="switchTheme('spatial'); closeCommandModal();" class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-white/10 text-neutral-300 hover:text-white cursor-pointer">
+          <span>Cupertino Spatial Glass (visionOS Rim)</span>
+          <kbd class="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[10px]">⌘3</kbd>
+        </div>
+        <div onclick="switchTheme('brutalist'); closeCommandModal();" class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-white/10 text-neutral-300 hover:text-white cursor-pointer">
+          <span>Refined Neo-Brutalism (3px Hard Shadow)</span>
+          <kbd class="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[10px]">⌘4</kbd>
+        </div>
+        <div onclick="switchTheme('editorial'); closeCommandModal();" class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-white/10 text-neutral-300 hover:text-white cursor-pointer">
+          <span>Stripe Editorial Luxury (Serif Paper)</span>
+          <kbd class="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[10px]">⌘5</kbd>
+        </div>
+
+        <div class="px-3 pt-3 py-1.5 text-[10px] text-neutral-500 uppercase tracking-widest">Interactive Actions</div>
+        <div onclick="spawnDemoSubagent(); closeCommandModal();" class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-white/10 text-neutral-300 hover:text-white cursor-pointer">
+          <span>Spawn Autonomous Subagent Worker</span>
+          <kbd class="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[10px]">⌘S</kbd>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       JAVASCRIPT LOGIC: Web Audio Haptics, Canvas Engine, Theme Switching
+       ======================================================================== -->
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // ------------------------------------------------------------------------
+    // 1. Zero-Dependency Web Audio Synthetic Haptic Engine
+    // ------------------------------------------------------------------------
+    let audioContext = null;
+    let hapticsEnabled = true;
+
+    function getAudioCtx() {
+      if (!audioContext && typeof window !== 'undefined') {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        audioContext = new AudioCtx();
+      }
+      if (audioContext && audioContext.state === 'suspended') {
+        audioContext.resume();
+      }
+      return audioContext;
+    }
+
+    function playHapticClick(frequency = 1200) {
+      if (!hapticsEnabled) return;
+      try {
+        const ctx = getAudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(frequency, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(120, ctx.currentTime + 0.035);
+
+        gain.gain.setValueAtTime(0.09, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.035);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start();
+        osc.stop(ctx.currentTime + 0.035);
+      } catch (e) {}
+    }
+
+    function toggleHaptics() {
+      hapticsEnabled = !hapticsEnabled;
+      const icon = document.getElementById('haptic-icon');
+      if (hapticsEnabled) {
+        icon.setAttribute('data-lucide', 'volume-2');
+        icon.className = 'w-4 h-4 text-emerald-400';
+        playHapticClick(1400);
+      } else {
+        icon.setAttribute('data-lucide', 'volume-x');
+        icon.className = 'w-4 h-4 text-neutral-500';
+      }
+      lucide.createIcons();
+    }
+
+    // ------------------------------------------------------------------------
+    // 2. Archetype Theme Switching System
+    // ------------------------------------------------------------------------
+    function switchTheme(themeId) {
+      playHapticClick(900);
+      const html = document.documentElement;
+      const bloom = document.getElementById('ambient-bloom');
+
+      html.removeAttribute('data-theme');
+      if (themeId !== 'linear') {
+        html.setAttribute('data-theme', themeId);
+      }
+
+      // Update ambient bloom aura
+      const bloomColors = {
+        linear: 'rgba(16, 185, 129, 0.15)',
+        teenage: 'rgba(255, 68, 0, 0.25)',
+        spatial: 'rgba(56, 189, 248, 0.25)',
+        brutalist: 'rgba(190, 242, 100, 0.2)',
+        editorial: 'rgba(0, 0, 0, 0.04)'
+      };
+      bloom.style.backgroundColor = bloomColors[themeId] || bloomColors.linear;
+
+      // Update active pill button styling
+      document.querySelectorAll('.archetype-pill').forEach(btn => {
+        btn.classList.remove('bg-white/15', 'text-white', 'font-medium');
+        btn.classList.add('opacity-60');
+      });
+      const activeBtn = document.getElementById(`btn-${themeId}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('opacity-60');
+        activeBtn.classList.add('bg-white/15', 'text-white', 'font-medium');
+      }
+    }
+
+    // ------------------------------------------------------------------------
+    // 3. Living Neural Wave Canvas (60FPS Physics Simulation)
+    // ------------------------------------------------------------------------
+    const canvas = document.getElementById('neural-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let mouse = { x: null, y: null, radius: 100 };
+    let waveMode = 'harmonic';
+
+    function resizeCanvas() {
+      width = canvas.width = canvas.parentElement.clientWidth;
+      height = canvas.height = canvas.parentElement.clientHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    canvas.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      mouse.x = e.clientX - rect.left;
+      mouse.y = e.clientY - rect.top;
+    });
+
+    canvas.addEventListener('mouseleave', () => {
+      mouse.x = null;
+      mouse.y = null;
+    });
+
+    let time = 0;
+    const cols = 24;
+    const rows = 12;
+
+    function renderCanvas() {
+      ctx.clearRect(0, 0, width, height);
+      time += 0.03;
+
+      const spacingX = width / cols;
+      const spacingY = height / rows;
+
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+
+      for (let i = 0; i <= cols; i++) {
+        for (let j = 0; j <= rows; j++) {
+          let origX = i * spacingX;
+          let origY = j * spacingY;
+
+          // Wave equation
+          let waveOffset = 0;
+          if (waveMode === 'harmonic') {
+            waveOffset = Math.sin(time + i * 0.3) * Math.cos(time + j * 0.3) * 12;
+          } else if (waveMode === 'quantum') {
+            waveOffset = Math.sin(time * 2 + (i + j) * 0.4) * 18;
+          } else {
+            waveOffset = (Math.sin(time * 3 + i * 0.5) > 0 ? 12 : -12);
+          }
+
+          let curX = origX;
+          let curY = origY + waveOffset;
+
+          // Mouse repulsion physics
+          if (mouse.x !== null && mouse.y !== null) {
+            let dx = curX - mouse.x;
+            let dy = curY - mouse.y;
+            let dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < mouse.radius) {
+              let force = (mouse.radius - dist) / mouse.radius;
+              curX += (dx / dist) * force * 24;
+              curY += (dy / dist) * force * 24;
+            }
+          }
+
+          // Draw node
+          ctx.beginPath();
+          ctx.arc(curX, curY, 1.8, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Draw mesh wireframe
+          if (i > 0) {
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+            ctx.lineWidth = 0.8;
+            ctx.beginPath();
+            ctx.moveTo(curX, curY);
+            ctx.lineTo((i - 1) * spacingX, curY);
+            ctx.stroke();
+          }
+        }
+      }
+
+      requestAnimationFrame(renderCanvas);
+    }
+    renderCanvas();
+
+    function setWaveMode(mode) {
+      playHapticClick(1300);
+      waveMode = mode;
+    }
+
+    function resetMesh() {
+      playHapticClick(800);
+      time = 0;
+    }
+
+    function synthesizeAgentRun() {
+      playHapticClick(1600);
+      const latencyEl = document.getElementById('telemetry-latency');
+      latencyEl.innerText = (Math.random() * 4 + 7).toFixed(1) + ' ms';
+      triggerTurboPulse();
+    }
+
+    // ------------------------------------------------------------------------
+    // 4. Interactive Micro-Controls & Telemetry Ingestion
+    // ------------------------------------------------------------------------
+    let turboEnabled = true;
+    function toggleTurboSwitch() {
+      turboEnabled = !turboEnabled;
+      playHapticClick(turboEnabled ? 1500 : 700);
+      const knob = document.getElementById('turbo-knob');
+      const toggle = document.getElementById('turbo-toggle');
+      if (turboEnabled) {
+        knob.style.transform = 'translateX(24px)';
+        toggle.style.backgroundColor = 'var(--primary)';
+      } else {
+        knob.style.transform = 'translateX(0px)';
+        toggle.style.backgroundColor = 'rgba(255, 255, 255, 0.15)';
+      }
+    }
+
+    function handleSliderChange(val) {
+      document.getElementById('slider-val').innerText = (val * 0.02 + 0.5).toFixed(2) + ' GHz';
+    }
+
+    function triggerTurboPulse() {
+      playHapticClick(1800);
+      const tokensEl = document.getElementById('cumulative-tokens');
+      let currentVal = parseInt(tokensEl.innerText.replace(/,/g, ''));
+      currentVal += Math.floor(Math.random() * 50000 + 25000);
+      tokensEl.innerText = currentVal.toLocaleString();
+    }
+
+    // Auto-increment live token throughput counter
+    setInterval(() => {
+      const tpEl = document.getElementById('token-throughput');
+      if (tpEl) {
+        const val = Math.floor(2700 + Math.random() * 300);
+        tpEl.innerText = val.toLocaleString() + ' tokens/s';
+      }
+    }, 1200);
+
+    // ------------------------------------------------------------------------
+    // 5. Dynamic Agent Fleet Management
+    // ------------------------------------------------------------------------
+    const sampleAgents = [
+      { id: "agent-04", role: "Telemetry Vector Quantizer", model: "DeepSeek R1", ws: "/telemetry/vector", time: "54ms", status: "STREAMING", color: "sky" },
+      { id: "agent-05", role: "Tactile Haptics Synthesizer", model: "Claude 3.7 Sonnet", ws: "/haptics/webaudio", time: "12ms", status: "EXECUTING", color: "emerald" },
+      { id: "agent-06", role: "Codebase Anti-Slop Linter", model: "Gemini 2.5 Flash", ws: "/lumina/auditor", time: "91ms", status: "STREAMING", color: "emerald" }
+    ];
+
+    function spawnDemoSubagent() {
+      playHapticClick(1500);
+      const tbody = document.getElementById('agent-table-body');
+      const randomAgent = sampleAgents[Math.floor(Math.random() * sampleAgents.length)];
+      
+      const tr = document.createElement('tr');
+      tr.className = 'hover:bg-white/[0.02] transition-colors animate-in fade-in duration-300';
+      tr.innerHTML = `
+        <td class="py-3 flex items-center gap-2.5">
+          <span class="w-2 h-2 rounded-full bg-${randomAgent.color}-400 animate-pulse"></span>
+          <div>
+            <span class="font-semibold text-white">${randomAgent.id} // ${randomAgent.role}</span>
+            <div class="text-[10px] text-neutral-500">Model: ${randomAgent.model}</div>
+          </div>
+        </td>
+        <td class="py-3 text-neutral-400">${randomAgent.ws}</td>
+        <td class="py-3 text-neutral-300">${randomAgent.time}</td>
+        <td class="py-3 text-right">
+          <span class="px-2 py-0.5 rounded bg-${randomAgent.color}-500/10 text-${randomAgent.color}-400 border border-${randomAgent.color}-500/20 text-[10px]">${randomAgent.status}</span>
+        </td>
+      `;
+      tbody.prepend(tr);
+    }
+
+    function filterAgents(query) {
+      const rows = document.querySelectorAll('#agent-table-body tr');
+      const lower = query.toLowerCase();
+      rows.forEach(row => {
+        row.style.display = row.innerText.toLowerCase().includes(lower) ? '' : 'none';
+      });
+    }
+
+    // ------------------------------------------------------------------------
+    // 6. Diff Toggle Handler
+    // ------------------------------------------------------------------------
+    function toggleDiffView() {
+      playHapticClick(1100);
+      const container = document.getElementById('diff-container');
+      container.classList.toggle('hidden');
+    }
+
+    // ------------------------------------------------------------------------
+    // 7. Command Palette Modal Handlers (Cmd+K / Ctrl+K)
+    // ------------------------------------------------------------------------
+    function openCommandModal() {
+      playHapticClick(1000);
+      document.getElementById('cmd-modal').classList.remove('hidden');
+      document.getElementById('cmd-input').focus();
+    }
+
+    function closeCommandModal() {
+      document.getElementById('cmd-modal').classList.add('hidden');
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        openCommandModal();
+      }
+      if (e.key === 'Escape') {
+        closeCommandModal();
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === '1') {
+        e.preventDefault();
+        switchTheme('linear');
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === '2') {
+        e.preventDefault();
+        switchTheme('teenage');
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === '3') {
+        e.preventDefault();
+        switchTheme('spatial');
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === '4') {
+        e.preventDefault();
+        switchTheme('brutalist');
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === '5') {
+        e.preventDefault();
+        switchTheme('editorial');
+      }
+    });
+  </script>
+</body>
+</html>

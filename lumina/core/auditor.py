@@ -47,7 +47,7 @@ class DesignAuditor:
             "id": "unreactive-button",
             "severity": "MEDIUM",
             "penalty": 7,
-            "pattern": re.compile(r'<button[^>]*class(?:Name)?="[^"]*(?<!active:scale-)px-[^"]*"', re.IGNORECASE),
+            "pattern": re.compile(r'<button\b(?!.*active:scale-)[^>]*class(?:Name)?=', re.IGNORECASE),
             "message": "Button lacks spring tactile active scale.",
             "recommendation": "Add `active:scale-[0.98]` and `transition-transform duration-100` for tactile press feedback."
         },
