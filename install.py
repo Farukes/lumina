@@ -9,6 +9,15 @@ Or from web:
 
 import os
 import sys
+
+# Ensure UTF-8 stdout on Windows
+if sys.platform == "win32":
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 import subprocess
 import shutil
 import urllib.request
