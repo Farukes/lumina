@@ -5,7 +5,7 @@ See detailed frontend guidelines in `.agents/rules/frontend-premium.md`.
 # Project Guidelines for Claude Code & AI Assistants
 
 ## Design System: Lumina Premium Standard
-This project follows the **Lumina Premium Design System** (Linear, Apple, Vercel tier).
+This project follows the **Lumina Premium Design System** (Linear, Apple, Stripe, Teenage Engineering tier).
 When writing UI components (React, Next.js, HTML, CSS):
 
 1. **Avoid AI Slop:**
@@ -21,6 +21,10 @@ When writing UI components (React, Next.js, HTML, CSS):
    - Motion: Framer Motion (`framer-motion`) with spring physics.
    - Primitives: Radix UI / headless primitives.
 
-3. **Component Structure:**
+3. **Archetypes Available in Lumina:**
+   - `linear-dark`, `apple-clean`, `vercel-mono`, `stripe-saas`, `cyber-tactile`,
+     `teenage-industrial`, `stripe-editorial`, `spatial-glass`, `refined-brutalism`.
+
+4. **Component Structure:**
    - Place reusable UI primitives in `components/ui/`.
    - Place composite blocks (Bento, Hero, Navigation) in `components/blocks/`.

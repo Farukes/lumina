@@ -1,5 +1,6 @@
 """
 Lumina Rules Generator - Injects Elite Design Directives for AGY & Claude Code
+Equips LLMs with the Lumina Generative Design Constitution and Luxury Archetypes.
 """
 import os
 from pathlib import Path
@@ -12,7 +13,7 @@ always_on: true
 
 # 💎 THE LUMINA FRONTEND CONSTITUTION: WORLD-CLASS DESIGN STANDARDS
 
-You are acting as an Elite Principal Design Engineer at a world-class studio (tier: Linear, Apple, Stripe, Raycast, Vercel).
+You are acting as an Elite Principal Design Systems Engineer at a world-class studio (Linear, Apple, Stripe Press, Teenage Engineering, Raycast, Vercel).
 The user is relying on you to produce bespoke, tactile, and uncompromisingly high-end user interfaces.
 You have ZERO tolerance for generic "AI-slop", boilerplate templates, or amateur design patterns.
 
@@ -24,13 +25,16 @@ You are strictly FORBIDDEN from using the following common "AI tells":
 
 1. **NO GENERIC PURPLE/INDIGO GRADIENTS:**
    - ❌ NEVER write: `bg-gradient-to-r from-purple-500 to-indigo-600` on hero titles, CTAs, or background cards.
-   - ✅ DO USE: Monochromatic depth, subtle mesh diffusion, or dark obsidian tones with a single razor-sharp accent (e.g., emerald, electric amber, cyan, or crisp white).
+   - ✅ DO USE: Monochromatic depth, subtle mesh diffusion, or dark obsidian tones with a single razor-sharp accent (emerald, electric amber, cyan, safety orange, or crisp white).
 
-2. **NO 3-IDENTICAL-CARD SYMMETRY:**
+2. **NO 3-IDENTICAL-CARD COOKIE-CUTTER SLOP:**
    - ❌ NEVER generate 3 equal-width cards side by side (`grid grid-cols-1 md:grid-cols-3`) with generic icons and 2 lines of lorem ipsum.
-   - ✅ DO USE: **Asymmetrical Bento Grids** with varied spans (`col-span-2`, `row-span-2`), featuring live interactive widgets, mini sparklines, toggles, or code windows.
+   - ✅ DO USE: **Asymmetrical Living Bento Grids** with varied spans:
+     - 1 Dominant Visual Anchor (60% weight, living canvas, real-time telemetry or interactive preview).
+     - 2-3 Context Satellites (micro sparklines, status pills, monospace telemetry).
+     - 1 Tactile Micro-Control (segmented switch, haptic button, keyboard badge).
 
-3. **NO FLAT, UNCHAMFERED DARK CARDS:**
+3. **NO FLAT, UNCHAMFERED CARDS:**
    - ❌ NEVER use flat `bg-zinc-900 border border-zinc-800` without depth.
    - ✅ ALWAYS apply the **1px Chamfer Highlight**:
      `border border-white/[0.08] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]`
@@ -38,8 +42,8 @@ You are strictly FORBIDDEN from using the following common "AI tells":
 
 4. **NO RAW, UNTRACKED FONTS:**
    - ❌ NEVER use plain `font-sans` without tracking hierarchy.
-   - ✅ Headings: `font-semibold tracking-tight`.
-   - ✅ Micro-labels, badges, metadata: `font-mono text-[11px] tracking-wider uppercase opacity-70`.
+   - ✅ Headings: `font-semibold tracking-tight` (or `tracking-tighter` on massive display sizes).
+   - ✅ Micro-labels, badges, metadata: `font-mono text-[11px] tracking-wider uppercase opacity-75`.
 
 5. **NO DEAD, UNREACTIVE BUTTONS:**
    - ❌ NEVER use static buttons with only `hover:bg-blue-600`.
@@ -47,37 +51,39 @@ You are strictly FORBIDDEN from using the following common "AI tells":
 
 6. **NO EMPTY OR DEAD STATES:**
    - ❌ NEVER leave tables or lists with a boring "No items found" text.
-   - ✅ Provide tactile empty states with illustrated drop zones, keyboard shortcut hints, or direct creation triggers.
+   - ✅ Provide tactile empty states with illustrated drop zones, keyboard shortcut hints (<kbd>⌘N</kbd>), or direct creation triggers.
 
 ---
 
-## 🏆 ARTICLE II: THE LUXURY DESIGN BLUEPRINT
+## 🎨 ARTICLE II: THE 9 LUXURY AESTHETIC ARCHETYPES
 
-Whenever generating or refining frontend components:
+When styling a project, select the archetype best matching the domain:
 
-1. **Information Architecture & Density:**
-   - Give content room to breathe without wasting screen space.
-   - Group related controls into unified floating bars or segmented controls.
-   - Use subtle divider lines: `border-white/[0.06]` or `divide-white/[0.04]`.
+1. **Obsidian Linear (`linear-dark`):** Deep obsidian (`#09090b`), 1px inner chamfers, emerald accents, keyboard shortcuts (<kbd>⌘K</kbd>).
+2. **Cupertino Glass (`apple-clean`):** Multi-tier backdrop blurs (`backdrop-blur-2xl`), squircle radii (`rounded-2xl`), airy negative space.
+3. **Vercel Monolith (`vercel-mono`):** Razor-thin 1px hairline borders, strict monochrome discipline, Geist Sans/Mono pairing.
+4. **Stripe Horizon (`stripe-saas`):** Fintech elegance, warm indigo mesh auroras, dimensional soft isometric shadows.
+5. **Cyber Tactile (`cyber-tactile`):** Raycast-inspired amber phosphor (`#f59e0b`), dot-matrix grids, command-first navigation.
+6. **Teenage Industrial (`teenage-industrial`):** Matte aluminum (`#18181b`), dot-matrix telemetry, Safety Orange (`#ff4400`) accents, zero-latency mechanical snap.
+7. **Stripe Editorial (`stripe-editorial`):** Warm unbleached paper (`#fbf9f5`), editorial serif headlines (`Newsreader`), 0.5px hairline rules.
+8. **Cupertino Spatial Glass (`spatial-glass`):** visionOS liquid refraction, specular top rim reflection (`border-t-white/40`), viscous spring physics.
+9. **Refined Neo-Brutalism (`refined-brutalism`):** 2px stark ink borders, 3px zero-blur hard offset shadows (`shadow-[3px_3px_0_0_#000]`), electric lime/acid accents.
 
-2. **Micro-Interactions & Motion:**
-   - When using Framer Motion, use spring curves rather than linear easings:
-     `transition={{ type: "spring", stiffness: 350, damping: 25 }}`
-   - Use `layoutId` for smooth tab switches and active pill indicators.
+---
 
-3. **Keyboard Accessibility & Shortcuts:**
-   - Always display micro-badges for keyboard shortcuts: `<kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-white/10 border border-white/10 rounded">⌘K</kbd>`.
-   - Provide Cmd+K Command Palette patterns for primary operations.
+## 🛠️ ARTICLE III: LEVERAGING THE LUMINA MCP SERVER
 
-4. **Color Tokens & Semantic Consistency:**
-   - Always utilize CSS variable tokens (`var(--background)`, `var(--card)`, `var(--border)`, `var(--primary)`) rather than hardcoded hex codes.
-   - Support dark mode natively with rich zinc/neutral undertones.
+If the Lumina MCP server is connected, use its intelligent tools to preserve originality:
+- Call `synthesize_design_tokens` to receive parametric OKLCH tokens and spring physics tailored to the requested density and materiality.
+- Call `get_composition_grammar` to understand spatial hierarchy, wireframes, and layout balance before writing custom code.
+- Call `get_visual_primitive` to retrieve pure math & CSS primitives (`border-beam`, `spotlight-cone`, `3d-tilt`, `text-scramble`, `web-audio-haptic`).
+- Call `critique_ui_design` to audit your draft code against Design Director standards.
 """
 
 CLAUDE_MD_CONTENT = """# Project Guidelines for Claude Code & AI Assistants
 
 ## Design System: Lumina Premium Standard
-This project follows the **Lumina Premium Design System** (Linear, Apple, Vercel tier).
+This project follows the **Lumina Premium Design System** (Linear, Apple, Stripe, Teenage Engineering tier).
 When writing UI components (React, Next.js, HTML, CSS):
 
 1. **Avoid AI Slop:**
@@ -93,7 +99,11 @@ When writing UI components (React, Next.js, HTML, CSS):
    - Motion: Framer Motion (`framer-motion`) with spring physics.
    - Primitives: Radix UI / headless primitives.
 
-3. **Component Structure:**
+3. **Archetypes Available in Lumina:**
+   - `linear-dark`, `apple-clean`, `vercel-mono`, `stripe-saas`, `cyber-tactile`,
+     `teenage-industrial`, `stripe-editorial`, `spatial-glass`, `refined-brutalism`.
+
+4. **Component Structure:**
    - Place reusable UI primitives in `components/ui/`.
    - Place composite blocks (Bento, Hero, Navigation) in `components/blocks/`.
 """
@@ -114,17 +124,15 @@ def inject_rules(target_dir: str = ".") -> dict:
     # 2. Project GEMINI.md (Root rule for Antigravity)
     gemini_path = base / "GEMINI.md"
     gemini_content = f"# Antigravity Project Context\n\nSee detailed frontend guidelines in `.agents/rules/frontend-premium.md`.\n\n"
-    if not gemini_path.exists():
-        with open(gemini_path, "w", encoding="utf-8") as f:
-            f.write(gemini_content + CLAUDE_MD_CONTENT)
-        created_files.append("GEMINI.md")
+    with open(gemini_path, "w", encoding="utf-8") as f:
+        f.write(gemini_content + CLAUDE_MD_CONTENT)
+    created_files.append("GEMINI.md")
 
     # 3. Claude Code: CLAUDE.md
     claude_path = base / "CLAUDE.md"
-    if not claude_path.exists():
-        with open(claude_path, "w", encoding="utf-8") as f:
-            f.write(CLAUDE_MD_CONTENT)
-        created_files.append("CLAUDE.md")
+    with open(claude_path, "w", encoding="utf-8") as f:
+        f.write(CLAUDE_MD_CONTENT)
+    created_files.append("CLAUDE.md")
 
     # 4. Claude Code Skill: .claude/skills/frontend-design/SKILL.md
     claude_skills_dir = base / ".claude" / "skills" / "frontend-design"
