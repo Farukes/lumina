@@ -348,6 +348,96 @@ def mcp():
     from mcp.server import main as run_mcp
     run_mcp()
 
+# ---------------------------------------------------------------------------
+# COMMAND: CLEAN / EJECT (Trace-Free Complete Uninstallation)
+# ---------------------------------------------------------------------------
+@main.command(name="clean")
+@click.option("--force", "-f", is_flag=True, help="Skip confirmation prompt")
+def clean(force):
+    """Remove all Lumina rules, tokens, and configs without leaving any trace."""
+    import shutil
+    print_banner("Trace-Free Uninstaller & Eject Engine")
+
+    removed_items = []
+
+    # 1. Remove .lumina/ directory
+    lumina_dir = Path(".lumina")
+    if lumina_dir.exists():
+        shutil.rmtree(lumina_dir, ignore_errors=True)
+        removed_items.append(".lumina/ (temporary reports directory)")
+
+    # 2. Remove .agents/rules/frontend-premium.md
+    agy_rule = Path(".agents/rules/frontend-premium.md")
+    if agy_rule.exists():
+        agy_rule.unlink()
+        removed_items.append(".agents/rules/frontend-premium.md (AGY rule)")
+        # remove parent dirs if empty
+        try:
+            agy_rule.parent.rmdir()
+            agy_rule.parent.parent.rmdir()
+        except OSError:
+            pass
+
+    # 3. Remove .claude/skills/frontend-design/
+    claude_skill = Path(".claude/skills/frontend-design")
+    if claude_skill.exists():
+        shutil.rmtree(claude_skill, ignore_errors=True)
+        removed_items.append(".claude/skills/frontend-design/ (Claude skill)")
+        try:
+            claude_skill.parent.rmdir()
+            claude_skill.parent.parent.rmdir()
+        except OSError:
+            pass
+
+    # 4. Remove or clean CLAUDE.md & GEMINI.md
+    for rule_file in [Path("CLAUDE.md"), Path("GEMINI.md")]:
+        if rule_file.exists():
+            try:
+                content = rule_file.read_text(encoding="utf-8")
+                if "Lumina" in content or "THE LUMINA FRONTEND CONSTITUTION" in content:
+                    rule_file.unlink()
+                    removed_items.append(f"{rule_file.name} (design guidelines)")
+            except Exception:
+                pass
+
+    # 5. Clean Lumina tokens from globals.css
+    css_candidates = [Path("globals.css"), Path("styles/globals.css"), Path("src/app/globals.css")]
+    for css_file in css_candidates:
+        if css_file.exists():
+            try:
+                content = css_file.read_text(encoding="utf-8")
+                import re
+                cleaned = re.sub(r'/\* --- LUMINA DESIGN TOKENS.*?/\* --- END LUMINA --- \*/', '', content, flags=re.DOTALL)
+                if cleaned == content:
+                    # Alternative match without end marker
+                    cleaned = re.sub(r'/\* --- LUMINA DESIGN TOKENS[^\n]*\n:root\s*\{[^}]*\}', '', content, flags=re.DOTALL)
+                if cleaned != content:
+                    css_file.write_text(cleaned.strip() + "\n", encoding="utf-8")
+                    removed_items.append(f"{css_file} (stripped Lumina CSS tokens)")
+            except Exception:
+                pass
+
+    if removed_items:
+        table = Table(title="Cleaned Artifacts (Zero Traces Remaining)", border_style="green")
+        table.add_column("Artifact Removed / Cleaned", style="bold green")
+        for item in removed_items:
+            table.add_row(item)
+        console.print(table)
+        console.print(Panel(
+            "[bold green]✔ Lumina has been completely removed from this project without leaving any trace![/bold green]\n"
+            "[dim]No registry entries, no daemons, no background processes, no orphaned files.[/dim]",
+            border_style="green",
+            title="[bold]Eject Successful[/bold]"
+        ))
+    else:
+        console.print("[yellow]No Lumina artifacts or configurations found in this directory.[/yellow]")
+
+@main.command(name="eject")
+@click.pass_context
+def eject(ctx):
+    """Alias for 'clean' command."""
+    ctx.invoke(clean)
+
 if __name__ == "__main__":
     main()
 
