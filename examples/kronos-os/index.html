@@ -237,10 +237,10 @@
         <button onclick="switchTheme('editorial')" id="btn-editorial" class="archetype-pill px-3 py-1.5 rounded-lg transition-all active:scale-[0.98] opacity-60 hover:opacity-100">Editorial</button>
       </div>
 
-      <!-- Audio Haptics & Shortcut Search Trigger -->
+      <!-- Sound / Mute Toggle & Shortcut Search Trigger -->
       <div class="flex items-center gap-2">
-        <button onclick="toggleHaptics()" id="haptic-toggle-btn" class="p-2 rounded-xl border border-white/10 hover:border-white/20 active:scale-[0.98] transition-all" title="Toggle Synthetic Web Audio Haptics">
-          <i data-lucide="volume-2" class="w-4 h-4 text-emerald-400" id="haptic-icon"></i>
+        <button onclick="toggleHaptics()" id="haptic-toggle-btn" class="p-2 rounded-xl border border-white/10 hover:border-white/20 active:scale-[0.98] transition-all opacity-60 hover:opacity-100" title="Audio is Muted by default">
+          <i data-lucide="volume-x" class="w-4 h-4 text-neutral-400" id="haptic-icon"></i>
         </button>
 
         <button onclick="openCommandModal()" class="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-white/10 hover:border-white/20 text-xs opacity-75 hover:opacity-100 active:scale-[0.98] transition-all">
@@ -433,12 +433,12 @@
           </div>
         </div>
 
-        <!-- Haptic Sound Tester Action Button -->
-        <div class="pt-4 border-t border-white/[0.06] flex items-center justify-between">
-          <span class="text-[11px] font-code opacity-60">CLICK CONFIRMATION</span>
-          <button onclick="playHapticClick(1400)" class="px-3 py-1 rounded-lg border border-white/15 hover:bg-white/10 font-code text-xs active:scale-[0.98] transition-all">
-            Test Click (<kbd>⌘T</kbd>)
-          </button>
+        <!-- Sampling Mode Status -->
+        <div class="pt-4 border-t border-white/[0.06] flex items-center justify-between font-code text-xs text-neutral-400">
+          <span class="opacity-60">SAMPLING CLOCK</span>
+          <span class="text-emerald-400 font-medium flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> 64-Bit PLL Locked
+          </span>
         </div>
       </div>
 
@@ -652,7 +652,7 @@
     // 1. Zero-Dependency Web Audio Synthetic Haptic Engine
     // ------------------------------------------------------------------------
     let audioContext = null;
-    let hapticsEnabled = true;
+    let hapticsEnabled = false;
 
     function getAudioCtx() {
       if (!audioContext && typeof window !== 'undefined') {
@@ -705,7 +705,6 @@
     // 2. Archetype Theme Switching System
     // ------------------------------------------------------------------------
     function switchTheme(themeId) {
-      playHapticClick(900);
       const html = document.documentElement;
       const bloom = document.getElementById('ambient-bloom');
 
@@ -828,17 +827,14 @@
     renderCanvas();
 
     function setWaveMode(mode) {
-      playHapticClick(1300);
       waveMode = mode;
     }
 
     function resetMesh() {
-      playHapticClick(800);
       time = 0;
     }
 
     function synthesizeAgentRun() {
-      playHapticClick(1600);
       const latencyEl = document.getElementById('telemetry-latency');
       latencyEl.innerText = (Math.random() * 4 + 7).toFixed(1) + ' ms';
       triggerTurboPulse();
@@ -850,7 +846,6 @@
     let turboEnabled = true;
     function toggleTurboSwitch() {
       turboEnabled = !turboEnabled;
-      playHapticClick(turboEnabled ? 1500 : 700);
       const knob = document.getElementById('turbo-knob');
       const toggle = document.getElementById('turbo-toggle');
       if (turboEnabled) {
@@ -867,7 +862,6 @@
     }
 
     function triggerTurboPulse() {
-      playHapticClick(1800);
       const tokensEl = document.getElementById('cumulative-tokens');
       let currentVal = parseInt(tokensEl.innerText.replace(/,/g, ''));
       currentVal += Math.floor(Math.random() * 50000 + 25000);
@@ -893,7 +887,6 @@
     ];
 
     function spawnDemoSubagent() {
-      playHapticClick(1500);
       const tbody = document.getElementById('agent-table-body');
       const randomAgent = sampleAgents[Math.floor(Math.random() * sampleAgents.length)];
       
@@ -928,7 +921,6 @@
     // 6. Diff Toggle Handler
     // ------------------------------------------------------------------------
     function toggleDiffView() {
-      playHapticClick(1100);
       const container = document.getElementById('diff-container');
       container.classList.toggle('hidden');
     }
@@ -937,7 +929,6 @@
     // 7. Command Palette Modal Handlers (Cmd+K / Ctrl+K)
     // ------------------------------------------------------------------------
     function openCommandModal() {
-      playHapticClick(1000);
       document.getElementById('cmd-modal').classList.remove('hidden');
       document.getElementById('cmd-input').focus();
     }
