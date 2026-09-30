@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lumina UI - World-Class Frontend Showcase</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    :root {
+      --bg: #09090b;
+      --card: #121215;
+      --border: rgba(255, 255, 255, 0.08);
+      --chamfer: inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+      --primary: #10b981;
+      --primary-glow: rgba(16, 185, 129, 0.25);
+      --font-main: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    /* Apple Clean Theme */
+    [data-theme="apple"] {
+      --bg: #f8fafc;
+      --card: rgba(255, 255, 255, 0.85);
+      --border: rgba(0, 0, 0, 0.08);
+      --chamfer: inset 0 1px 1px 0 rgba(255, 255, 255, 0.9);
+      --primary: #0071e3;
+      --primary-glow: rgba(0, 113, 227, 0.2);
+    }
+    [data-theme="apple"] body {
+      color: #1e293b !important;
+    }
+
+    /* Vercel Monolith Theme */
+    [data-theme="vercel"] {
+      --bg: #000000;
+      --card: #0a0a0a;
+      --border: #262626;
+      --chamfer: none;
+      --primary: #ffffff;
+      --primary-glow: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Stripe Horizon Theme */
+    [data-theme="stripe"] {
+      --bg: #0b0f19;
+      --card: #111827;
+      --border: rgba(99, 102, 241, 0.2);
+      --chamfer: inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+      --primary: #6366f1;
+      --primary-glow: rgba(99, 102, 241, 0.35);
+    }
+
+    /* Cyber Tactile Theme */
+    [data-theme="cyber"] {
+      --bg: #0c0d12;
+      --card: #141620;
+      --border: rgba(245, 158, 11, 0.25);
+      --chamfer: inset 0 1px 0 0 rgba(245, 158, 11, 0.15);
+      --primary: #f59e0b;
+      --primary-glow: rgba(245, 158, 11, 0.3);
+      --font-main: 'Space Grotesk', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      font-family: var(--font-main);
+      transition: background-color 0.3s ease;
+    }
+
+    .chamfer-card {
+      background-color: var(--card);
+      border: 1px solid var(--border);
+      box-shadow: var(--chamfer);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .chamfer-card:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+    }
+
+    @keyframes borderSpin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .animate-spin-slow {
+      animation: borderSpin 4s linear infinite;
+    }
+  </style>
+</head>
+<body class="text-neutral-100 min-h-screen selection:bg-emerald-500/30 selection:text-white pb-32">
+
+  <!-- Top Floating Header -->
+  <header class="sticky top-4 z-40 max-w-6xl mx-auto px-4">
+    <div class="chamfer-card rounded-2xl p-3 flex items-center justify-between backdrop-blur-xl bg-opacity-80">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+          <i data-lucide="zap" class="w-4 h-4"></i>
+        </div>
+        <div>
+          <span class="text-sm font-bold tracking-tight text-white">LUMINA</span>
+          <span class="text-[11px] font-mono text-neutral-400 ml-1.5 px-2 py-0.5 rounded bg-white/[0.04]">v1.0.0</span>
+        </div>
+      </div>
+
+      <!-- Theme Switcher Pills -->
+      <div class="flex items-center gap-1 bg-black/40 p-1 rounded-xl border border-white/[0.06] text-xs font-medium">
+        <button onclick="setTheme('linear')" class="theme-btn px-3 py-1.5 rounded-lg transition-all bg-white/[0.1] text-white">Obsidian Linear</button>
+        <button onclick="setTheme('apple')" class="theme-btn px-3 py-1.5 rounded-lg transition-all text-neutral-400 hover:text-white">Cupertino</button>
+        <button onclick="setTheme('vercel')" class="theme-btn px-3 py-1.5 rounded-lg transition-all text-neutral-400 hover:text-white">Vercel</button>
+        <button onclick="setTheme('stripe')" class="theme-btn px-3 py-1.5 rounded-lg transition-all text-neutral-400 hover:text-white">Stripe</button>
+        <button onclick="setTheme('cyber')" class="theme-btn px-3 py-1.5 rounded-lg transition-all text-neutral-400 hover:text-white">Cyber</button>
+      </div>
+
+      <!-- Sound Toggle & Cmd+K Trigger -->
+      <div class="flex items-center gap-2">
+        <button onclick="toggleSound()" id="sound-btn" class="p-2 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.08] text-emerald-400 transition-colors" title="Haptic Audio Feedback">
+          <i data-lucide="volume-2" class="w-4 h-4"></i>
+        </button>
+        <button onclick="openCmd()" class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-xs text-neutral-400 hover:text-white hover:border-white/20 transition-all">
+          <i data-lucide="search" class="w-3.5 h-3.5"></i>
+          <span>Cmd+K</span>
+          <kbd class="text-[10px] font-mono px-1 rounded bg-white/[0.08]">⌘K</kbd>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="max-w-6xl mx-auto px-4 mt-12">
+    <div class="text-center relative py-12">
+      <!-- Ambient Glow Spot -->
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] bg-emerald-500/15 blur-[120px] rounded-full pointer-events-none -z-10" id="hero-glow"></div>
+
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs font-mono text-neutral-300 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] mb-6">
+        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-emerald-400"></i>
+        <span>WORLD-CLASS AI FRONTEND ENGINE</span>
+        <span class="w-1 h-1 rounded-full bg-neutral-600"></span>
+        <span class="text-emerald-400">ZERO AI-SLOP</span>
+      </div>
+
+      <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white max-w-3xl mx-auto leading-tight">
+        Elevate AI-Generated Frontends to <span class="text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-neutral-400">Pure Craftsmanship</span>.
+      </h1>
+
+      <p class="mt-4 text-base sm:text-lg text-neutral-400 max-w-xl mx-auto font-normal leading-relaxed">
+        Strict design rules, 1px metallic chamfers, spring physics, and zero generic purple gradients for AGY & Claude Code.
+      </p>
+
+      <div class="mt-8 flex flex-wrap justify-center gap-4">
+        <!-- Magnetic Rotating Border Beam Button -->
+        <button onclick="playClick(); alert('Lumina Component Registry has 8 AAA-tier blocks ready!')" class="relative group p-[1px] rounded-xl overflow-hidden focus:outline-none active:scale-[0.98] transition-transform">
+          <span class="absolute inset-[-1000%] animate-spin-slow bg-[conic-gradient(from_90deg_at_50%_50%,#000000_0%,#10b981_50%,#000000_100%)] opacity-80 group-hover:opacity-100 transition-opacity"></span>
+          <span class="relative z-10 flex items-center gap-2 px-6 py-3 rounded-[11px] bg-neutral-950 font-semibold text-sm text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15)]">
+            <i data-lucide="box" class="w-4 h-4 text-emerald-400"></i>
+            <span>Add AAA Blocks to Project</span>
+          </span>
+        </button>
+
+        <button onclick="runAuditDemo()" class="chamfer-card px-5 py-3 rounded-xl text-sm font-medium text-neutral-200 hover:text-white flex items-center gap-2 active:scale-[0.98]">
+          <i data-lucide="shield-alert" class="w-4 h-4 text-amber-400"></i>
+          <span>Simulate AI-Slop Audit</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Live Asymmetric Bento Grid Showcase -->
+    <div class="mt-12">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h2 class="text-lg font-bold text-white tracking-tight flex items-center gap-2">
+            <i data-lucide="layout-grid" class="w-5 h-5 text-emerald-400"></i>
+            <span>Living Bento Grid (No 3-Card Template)</span>
+          </h2>
+          <p class="text-xs text-neutral-400">Asymmetric spans, chamfers, sparklines, and live telemetry.</p>
+        </div>
+        <span class="text-xs font-mono text-emerald-400 px-2 py-1 rounded bg-emerald-500/10 border border-emerald-500/20">
+          CHAMFER: ACTIVE
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[220px]">
+        
+        <!-- Bento 1: Hero Telemetry -->
+        <div class="md:col-span-2 md:row-span-2 chamfer-card rounded-2xl p-8 flex flex-col justify-between relative overflow-hidden group">
+          <div class="absolute -right-12 -top-12 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-emerald-500/20 transition-all"></div>
+          
+          <div class="flex items-center justify-between">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              REALTIME WORKFLOW STREAM
+            </div>
+            <span class="text-xs font-mono text-neutral-500">ENGINE_OK</span>
+          </div>
+
+          <div>
+            <div class="text-5xl font-extrabold tracking-tight text-white flex items-baseline gap-3">
+              <span id="counter">1,420</span>
+              <span class="text-emerald-400 text-sm font-mono flex items-center font-normal">
+                <i data-lucide="trending-up" class="w-4 h-4 mr-1"></i> +24.8%
+              </span>
+            </div>
+            <p class="text-neutral-400 text-sm mt-2 max-w-sm">
+              Autonomous AGY & Claude Code agents compiling design-verified React components.
+            </p>
+          </div>
+
+          <div class="pt-4 border-t border-white/[0.06] flex items-center justify-between">
+            <div class="flex gap-2">
+              <span class="px-2 py-1 rounded bg-white/[0.04] text-[11px] font-mono text-neutral-300 border border-white/[0.06]">OKLCH_SPACE</span>
+              <span class="px-2 py-1 rounded bg-white/[0.04] text-[11px] font-mono text-neutral-300 border border-white/[0.06]">CHAMFER_1PX</span>
+            </div>
+            <button onclick="incrementStream()" class="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-neutral-950 font-semibold text-xs active:scale-[0.98] transition-all">
+              Push Telemetry +15
+            </button>
+          </div>
+        </div>
+
+        <!-- Bento 2: Interactive Toggle -->
+        <div class="chamfer-card rounded-2xl p-6 flex flex-col justify-between">
+          <div class="flex items-center justify-between">
+            <div class="p-2 rounded-xl bg-white/[0.04] border border-white/[0.08] text-amber-400">
+              <i data-lucide="zap" class="w-4 h-4"></i>
+            </div>
+            <button onclick="toggleTurbo()" id="turbo-toggle" class="w-11 h-6 flex items-center rounded-full p-1 bg-amber-500 transition-colors">
+              <div id="turbo-dot" class="bg-neutral-950 w-4 h-4 rounded-full shadow-md transform translate-x-5 transition-transform"></div>
+            </button>
+          </div>
+          <div>
+            <h4 class="text-white text-sm font-semibold tracking-tight">Zero-Slop Enforcer</h4>
+            <p class="text-neutral-400 text-xs mt-1">Intercepts and purges generic purple gradients in AST.</p>
+          </div>
+        </div>
+
+        <!-- Bento 3: Security & Enclave -->
+        <div class="chamfer-card rounded-2xl p-6 flex flex-col justify-between">
+          <div class="p-2 w-fit rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
+            <i data-lucide="shield-check" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <div class="text-cyan-400 text-[11px] font-mono uppercase tracking-wider">Tactile Feedback</div>
+            <h4 class="text-white text-sm font-semibold tracking-tight mt-1">Web Audio Synth</h4>
+            <p class="text-neutral-400 text-xs mt-1">Micro-haptics on clicks, toggles and commands.</p>
+          </div>
+        </div>
+
+        <!-- Bento 4: Terminal Command Line -->
+        <div class="md:col-span-2 chamfer-card rounded-2xl p-6 flex flex-col justify-between">
+          <div class="flex items-center gap-2 text-neutral-400 text-xs font-mono">
+            <i data-lucide="terminal" class="w-3.5 h-3.5 text-neutral-500"></i>
+            <span>LUMINA_CLI_OUTPUT</span>
+          </div>
+          <div class="font-mono text-xs text-neutral-300 bg-black/60 rounded-xl p-3 border border-white/[0.04]">
+            <span class="text-emerald-400">$</span> lumina audit --fix --strict
+            <div class="text-neutral-400 text-[11px] mt-1" id="audit-status">✔ 0 AI tells found, Chamfer highlights verified, Score: 98/100</div>
+          </div>
+          <div class="flex items-center justify-between text-xs text-neutral-500 font-mono">
+            <span>Latency: 3.2ms</span>
+            <span class="text-emerald-400">LINEAR_TIER_ACTIVE</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- AI Audit Simulator Modal -->
+    <div id="audit-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
+      <div class="chamfer-card rounded-2xl max-w-lg w-full p-6 bg-neutral-950 border border-white/20 shadow-2xl">
+        <div class="flex items-center justify-between pb-3 border-b border-white/[0.08]">
+          <div class="flex items-center gap-2 text-amber-400 font-bold text-sm">
+            <i data-lucide="shield-alert" class="w-4 h-4"></i>
+            <span>LUMINA DESIGN AUDIT SCANNER</span>
+          </div>
+          <button onclick="closeAuditModal()" class="text-neutral-500 hover:text-white text-xs font-mono">✕ ESC</button>
+        </div>
+
+        <div class="mt-4 space-y-3 font-mono text-xs">
+          <div class="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-300">
+            <div class="font-bold">❌ [HIGH] generic-purple-gradient detected</div>
+            <div class="text-neutral-400 mt-1">src/components/Hero.tsx:42 -> from-purple-500 to-indigo-600</div>
+            <div class="text-emerald-400 text-[11px] mt-1">✔ FIX: Replaced with Obsidian radial glow + 1px chamfer</div>
+          </div>
+
+          <div class="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300">
+            <div class="font-bold">⚠️ [MEDIUM] missing-chamfer-highlight</div>
+            <div class="text-neutral-400 mt-1">src/components/Cards.tsx:18 -> flat bg-zinc-900 border-zinc-800</div>
+            <div class="text-emerald-400 text-[11px] mt-1">✔ FIX: Added shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]</div>
+          </div>
+        </div>
+
+        <div class="mt-6 flex items-center justify-between pt-3 border-t border-white/[0.08]">
+          <div class="text-xs font-mono text-neutral-400">Score: <span class="text-emerald-400 font-bold">96/100 (Tier S)</span></div>
+          <button onclick="closeAuditModal()" class="px-4 py-2 rounded-xl bg-white hover:bg-neutral-200 text-neutral-950 font-semibold text-xs active:scale-[0.98]">
+            Apply Auto-Fix Prompt
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Command Palette (Cmd+K) Modal -->
+    <div id="cmd-modal" class="hidden fixed inset-0 z-50 flex items-start justify-center pt-24 px-4 bg-black/70 backdrop-blur-md">
+      <div class="chamfer-card rounded-2xl w-full max-w-xl bg-neutral-950 border border-white/20 shadow-2xl overflow-hidden">
+        <div class="flex items-center px-4 py-3.5 border-b border-white/[0.08] gap-3">
+          <i data-lucide="search" class="w-4 h-4 text-neutral-500"></i>
+          <input type="text" id="cmd-input" placeholder="Type a command or component name..." class="w-full bg-transparent text-white text-sm focus:outline-none placeholder-neutral-500">
+          <button onclick="closeCmd()" class="text-xs font-mono text-neutral-500 hover:text-white px-1.5 py-0.5 rounded border border-white/[0.08]">ESC</button>
+        </div>
+        <div class="p-2 space-y-1">
+          <div onclick="setTheme('linear'); closeCmd();" class="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-white/[0.06] text-neutral-300 hover:text-white cursor-pointer">
+            <span class="text-sm font-medium">Switch to Obsidian Linear Theme</span>
+            <kbd class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/[0.04]">⌘1</kbd>
+          </div>
+          <div onclick="setTheme('apple'); closeCmd();" class="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-white/[0.06] text-neutral-300 hover:text-white cursor-pointer">
+            <span class="text-sm font-medium">Switch to Cupertino Clean Theme</span>
+            <kbd class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/[0.04]">⌘2</kbd>
+          </div>
+          <div onclick="runAuditDemo(); closeCmd();" class="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-white/[0.06] text-neutral-300 hover:text-white cursor-pointer">
+            <span class="text-sm font-medium">Run Lumina AI-Slop Code Audit</span>
+            <kbd class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/[0.04]">⌘A</kbd>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Floating Island Dock (Bottom Navigation) -->
+  <div class="fixed bottom-6 inset-x-0 flex justify-center z-40 pointer-events-none">
+    <nav class="pointer-events-auto flex items-center gap-1 p-2 rounded-2xl bg-neutral-950/80 backdrop-blur-xl border border-white/[0.1] shadow-[0_8px_32px_rgba(0,0,0,0.5),inset_0_1px_0_0_rgba(255,255,255,0.08)]">
+      <button onclick="setTheme('linear'); playClick();" class="dock-btn px-3 py-2 rounded-xl text-xs font-medium text-white bg-white/[0.1] flex items-center gap-1.5">
+        <i data-lucide="layers" class="w-3.5 h-3.5"></i>
+        <span>Linear</span>
+      </button>
+      <button onclick="setTheme('apple'); playClick();" class="dock-btn px-3 py-2 rounded-xl text-xs font-medium text-neutral-400 hover:text-white flex items-center gap-1.5">
+        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+        <span>Cupertino</span>
+      </button>
+      <button onclick="setTheme('vercel'); playClick();" class="dock-btn px-3 py-2 rounded-xl text-xs font-medium text-neutral-400 hover:text-white flex items-center gap-1.5">
+        <i data-lucide="code" class="w-3.5 h-3.5"></i>
+        <span>Vercel</span>
+      </button>
+      <button onclick="setTheme('cyber'); playClick();" class="dock-btn px-3 py-2 rounded-xl text-xs font-medium text-neutral-400 hover:text-white flex items-center gap-1.5">
+        <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
+        <span>Cyber</span>
+      </button>
+      <button onclick="runAuditDemo(); playClick();" class="dock-btn px-3 py-2 rounded-xl text-xs font-medium text-amber-400 hover:text-amber-300 flex items-center gap-1.5">
+        <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+        <span>Audit</span>
+      </button>
+    </nav>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    // Web Audio Synthesized Tactile Sound Engine
+    let audioCtx = null;
+    let soundEnabled = true;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function playClick() {
+      if (!soundEnabled) return;
+      initAudio();
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.04);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.04);
+      } catch (e) {}
+    }
+
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      const btn = document.getElementById('sound-btn');
+      if (soundEnabled) {
+        btn.innerHTML = '<i data-lucide="volume-2" class="w-4 h-4 text-emerald-400"></i>';
+        playClick();
+      } else {
+        btn.innerHTML = '<i data-lucide="volume-x" class="w-4 h-4 text-neutral-500"></i>';
+      }
+      lucide.createIcons();
+    }
+
+    // Theme Switcher Logic
+    function setTheme(theme) {
+      playClick();
+      const html = document.documentElement;
+      const glow = document.getElementById('hero-glow');
+      
+      html.removeAttribute('data-theme');
+      if (theme !== 'linear') {
+        html.setAttribute('data-theme', theme);
+      }
+
+      if (theme === 'apple') {
+        glow.style.backgroundColor = 'rgba(0, 113, 227, 0.2)';
+      } else if (theme === 'vercel') {
+        glow.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+      } else if (theme === 'stripe') {
+        glow.style.backgroundColor = 'rgba(99, 102, 241, 0.25)';
+      } else if (theme === 'cyber') {
+        glow.style.backgroundColor = 'rgba(245, 158, 11, 0.2)';
+      } else {
+        glow.style.backgroundColor = 'rgba(16, 185, 129, 0.2)';
+      }
+
+      // Update button highlights
+      document.querySelectorAll('.theme-btn').forEach(btn => {
+        btn.classList.remove('bg-white/[0.1]', 'text-white');
+        btn.classList.add('text-neutral-400');
+      });
+      event?.target?.classList?.add('bg-white/[0.1]', 'text-white');
+    }
+
+    // Stream Counter Increment
+    let count = 1420;
+    function incrementStream() {
+      playClick();
+      count += 15;
+      document.getElementById('counter').innerText = count.toLocaleString();
+    }
+
+    // Turbo Toggle
+    let turbo = true;
+    function toggleTurbo() {
+      playClick();
+      turbo = !turbo;
+      const toggle = document.getElementById('turbo-toggle');
+      const dot = document.getElementById('turbo-dot');
+      if (turbo) {
+        toggle.className = 'w-11 h-6 flex items-center rounded-full p-1 bg-amber-500 transition-colors';
+        dot.className = 'bg-neutral-950 w-4 h-4 rounded-full shadow-md transform translate-x-5 transition-transform';
+      } else {
+        toggle.className = 'w-11 h-6 flex items-center rounded-full p-1 bg-neutral-800 transition-colors';
+        dot.className = 'bg-neutral-950 w-4 h-4 rounded-full shadow-md transform translate-x-0 transition-transform';
+      }
+    }
+
+    // Cmd+K Palette Handlers
+    function openCmd() {
+      playClick();
+      document.getElementById('cmd-modal').classList.remove('hidden');
+      document.getElementById('cmd-input').focus();
+    }
+    function closeCmd() {
+      document.getElementById('cmd-modal').classList.add('hidden');
+    }
+
+    // Audit Modal Handlers
+    function runAuditDemo() {
+      playClick();
+      document.getElementById('audit-modal').classList.remove('hidden');
+    }
+    function closeAuditModal() {
+      document.getElementById('audit-modal').classList.add('hidden');
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        openCmd();
+      }
+      if (e.key === 'Escape') {
+        closeCmd();
+        closeAuditModal();
+      }
+    });
+  </script>
+</body>
+</html>

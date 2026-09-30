@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lumina-cli"
+version = "1.0.0"
+description = "Premium Frontend Engine & Anti-AI-Slop Toolkit for AGY, Claude Code & AI Builders"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "click>=8.0",
+    "rich>=13.0",
+    "questionary>=2.0",
+]
+
+[project.scripts]
+lumina = "lumina.cli:main"
+agy-ui = "lumina.cli:main"
