@@ -29,6 +29,7 @@ from lumina.core.themes import THEMES
 from lumina.core.rules_generator import inject_rules
 from lumina.core.registry import COMPONENTS
 from lumina.core.auditor import DesignAuditor
+from lumina.core.polisher import StylePolisher
 from lumina.core.prompt_engine import generate_prompt, PROMPT_TEMPLATES
 
 console = Console()
@@ -298,16 +299,54 @@ def showcase():
         console.print("[red]Showcase file not found.[/red]")
 
 # ---------------------------------------------------------------------------
-# COMMAND: GHOST (The In-Browser AI HUD & Reverse-Agent Teleport)
+# COMMAND: POLISH (Automated Codebase Refactoring & Slop Removal)
 # ---------------------------------------------------------------------------
 @main.command()
-@click.option("--no-browser", is_flag=True, help="Do not automatically open browser demo")
-def ghost(no_browser):
-    """Launch the Lumina Ghost in-browser AI HUD bridge (port 3939)."""
-    print_banner("Lumina Ghost // In-Browser AI HUD Bridge")
-    bridge_script = Path(__file__).parent.parent / "ghost" / "bridge.py"
-    from ghost.bridge import run_bridge
-    run_bridge(open_browser=not no_browser)
+@click.option("--path", "-p", default=".", help="Directory to polish")
+@click.option("--dry-run", is_flag=True, help="Preview changes without saving to disk")
+def polish(path, dry_run):
+    """Scan and automatically refactor AI-slop into Apple/Linear design standards."""
+    print_banner("Lumina Code Polisher // Automated Refactor")
+
+    polisher = StylePolisher(path)
+    with console.status("[bold cyan]Polishing codebase (chamfers, gradients, spring physics)...", spinner="dots"):
+        res = polisher.polish(dry_run=dry_run)
+
+    if res["total_fixes"] == 0:
+        console.print("[bold green]🎉 Zero design defects found! Your code is already world-class.[/bold green]\n")
+        return
+
+    table = Table(title="Lumina Polished Elements", border_style="green")
+    table.add_column("Location", style="cyan")
+    table.add_column("Refactoring Rule", style="bold white")
+    table.add_column("Original Snippet", style="red")
+    table.add_column("Polished Replacement", style="green")
+
+    for diff in res["diffs"][:20]:
+        table.add_row(
+            f"{diff.file_path}:{diff.line_number}",
+            diff.rule_name,
+            diff.original[:45] + "...",
+            diff.replacement[:45] + "..."
+        )
+
+    console.print(table)
+    action_text = "Previewed (Dry-Run)" if dry_run else "Refactored & Saved directly to disk"
+    console.print(Panel(
+        f"[bold green]✔ Successfully {action_text}![/bold green]\n\n"
+        f"Files Scanned: [cyan]{res['total_files']}[/cyan] | Files Modified: [magenta]{res['modified_files']}[/magenta] | Fixes Applied: [green]{res['total_fixes']}[/green]",
+        border_style="green",
+        title="[bold]Polish Summary[/bold]"
+    ))
+
+# ---------------------------------------------------------------------------
+# COMMAND: MCP (Model Context Protocol Server for AGY & Claude Code)
+# ---------------------------------------------------------------------------
+@main.command()
+def mcp():
+    """Launch the Lumina Model Context Protocol (MCP) server over stdio."""
+    from mcp.server import main as run_mcp
+    run_mcp()
 
 if __name__ == "__main__":
     main()

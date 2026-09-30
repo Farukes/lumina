@@ -1,15 +1,16 @@
 {
-  "name": "lumina-ghost",
+  "name": "lumina-design",
   "version": "1.0.0",
-  "description": "In-Browser Visual AI HUD & Reverse-Agent Teleport for AGY & Claude Code",
-  "main": "ghost/server.js",
+  "description": "Design Linter, Automated Style Polisher & MCP Server for AGY and Claude Code",
+  "main": "bin/cli.js",
   "bin": {
-    "lumina-ghost": "./bin/ghost.js",
-    "ghost": "./bin/ghost.js"
+    "lumina": "./bin/cli.js"
   },
   "scripts": {
-    "start": "node ghost/server.js",
-    "dev": "node ghost/server.js"
+    "polish": "node bin/cli.js polish",
+    "audit": "node bin/cli.js audit",
+    "init": "node bin/cli.js init",
+    "mcp": "node bin/cli.js mcp"
   },
   "keywords": [
     "ai",
@@ -17,10 +18,11 @@
     "antigravity",
     "claude-code",
     "design-system",
-    "hud",
-    "devtools",
-    "tailwind",
-    "linear"
+    "linter",
+    "polisher",
+    "mcp",
+    "linear",
+    "apple"
   ],
   "author": "Lumina Team",
   "license": "MIT"

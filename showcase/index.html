@@ -109,19 +109,19 @@
 
       <!-- Theme Switcher Pills -->
       <div class="flex items-center gap-1 bg-black/40 p-1 rounded-xl border border-white/[0.06] text-xs font-medium">
-        <button onclick="setTheme('linear')" class="theme-btn px-3 py-1.5 rounded-lg transition-all bg-white/[0.1] text-white">Obsidian Linear</button>
-        <button onclick="setTheme('apple')" class="theme-btn px-3 py-1.5 rounded-lg transition-all text-neutral-400 hover:text-white">Cupertino</button>
-        <button onclick="setTheme('vercel')" class="theme-btn px-3 py-1.5 rounded-lg transition-all text-neutral-400 hover:text-white">Vercel</button>
-        <button onclick="setTheme('stripe')" class="theme-btn px-3 py-1.5 rounded-lg transition-all text-neutral-400 hover:text-white">Stripe</button>
-        <button onclick="setTheme('cyber')" class="theme-btn px-3 py-1.5 rounded-lg transition-all text-neutral-400 hover:text-white">Cyber</button>
+        <button onclick="setTheme('linear')" class="theme-btn px-3 py-1.5 rounded-lg transition-all bg-white/[0.1] text-white active:scale-[0.98] transition-transform duration-100">Obsidian Linear</button>
+        <button onclick="setTheme('apple')" class="theme-btn px-3 py-1.5 rounded-lg transition-all text-neutral-400 hover:text-white active:scale-[0.98] transition-transform duration-100">Cupertino</button>
+        <button onclick="setTheme('vercel')" class="theme-btn px-3 py-1.5 rounded-lg transition-all text-neutral-400 hover:text-white active:scale-[0.98] transition-transform duration-100">Vercel</button>
+        <button onclick="setTheme('stripe')" class="theme-btn px-3 py-1.5 rounded-lg transition-all text-neutral-400 hover:text-white active:scale-[0.98] transition-transform duration-100">Stripe</button>
+        <button onclick="setTheme('cyber')" class="theme-btn px-3 py-1.5 rounded-lg transition-all text-neutral-400 hover:text-white active:scale-[0.98] transition-transform duration-100">Cyber</button>
       </div>
 
       <!-- Sound Toggle & Cmd+K Trigger -->
       <div class="flex items-center gap-2">
-        <button onclick="toggleSound()" id="sound-btn" class="p-2 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.08] text-emerald-400 transition-colors" title="Haptic Audio Feedback">
+        <button onclick="toggleSound()" id="sound-btn" class="p-2 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.08] text-emerald-400 transition-colors active:scale-[0.98] transition-transform duration-100" title="Haptic Audio Feedback">
           <i data-lucide="volume-2" class="w-4 h-4"></i>
         </button>
-        <button onclick="openCmd()" class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-xs text-neutral-400 hover:text-white hover:border-white/20 transition-all">
+        <button onclick="openCmd()" class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-xs text-neutral-400 hover:text-white hover:border-white/20 transition-all active:scale-[0.98] transition-transform duration-100">
           <i data-lucide="search" class="w-3.5 h-3.5"></i>
           <span>Cmd+K</span>
           <kbd class="text-[10px] font-mono px-1 rounded bg-white/[0.08]">⌘K</kbd>
@@ -226,7 +226,7 @@
             <div class="p-2 rounded-xl bg-white/[0.04] border border-white/[0.08] text-amber-400">
               <i data-lucide="zap" class="w-4 h-4"></i>
             </div>
-            <button onclick="toggleTurbo()" id="turbo-toggle" class="w-11 h-6 flex items-center rounded-full p-1 bg-amber-500 transition-colors">
+            <button onclick="toggleTurbo()" id="turbo-toggle" class="w-11 h-6 flex items-center rounded-full p-1 bg-amber-500 transition-colors active:scale-[0.98] transition-transform duration-100">
               <div id="turbo-dot" class="bg-neutral-950 w-4 h-4 rounded-full shadow-md transform translate-x-5 transition-transform"></div>
             </button>
           </div>
@@ -275,7 +275,7 @@
             <i data-lucide="shield-alert" class="w-4 h-4"></i>
             <span>LUMINA DESIGN AUDIT SCANNER</span>
           </div>
-          <button onclick="closeAuditModal()" class="text-neutral-500 hover:text-white text-xs font-mono">✕ ESC</button>
+          <button onclick="closeAuditModal()" class="text-neutral-500 hover:text-white text-xs font-mono active:scale-[0.98] transition-transform duration-100">✕ ESC</button>
         </div>
 
         <div class="mt-4 space-y-3 font-mono text-xs">
@@ -307,7 +307,7 @@
         <div class="flex items-center px-4 py-3.5 border-b border-white/[0.08] gap-3">
           <i data-lucide="search" class="w-4 h-4 text-neutral-500"></i>
           <input type="text" id="cmd-input" placeholder="Type a command or component name..." class="w-full bg-transparent text-white text-sm focus:outline-none placeholder-neutral-500">
-          <button onclick="closeCmd()" class="text-xs font-mono text-neutral-500 hover:text-white px-1.5 py-0.5 rounded border border-white/[0.08]">ESC</button>
+          <button onclick="closeCmd()" class="text-xs font-mono text-neutral-500 hover:text-white px-1.5 py-0.5 rounded border border-white/[0.08] active:scale-[0.98] transition-transform duration-100">ESC</button>
         </div>
         <div class="p-2 space-y-1">
           <div onclick="setTheme('linear'); closeCmd();" class="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-white/[0.06] text-neutral-300 hover:text-white cursor-pointer">
@@ -331,23 +331,23 @@
   <!-- Floating Island Dock (Bottom Navigation) -->
   <div class="fixed bottom-6 inset-x-0 flex justify-center z-40 pointer-events-none">
     <nav class="pointer-events-auto flex items-center gap-1 p-2 rounded-2xl bg-neutral-950/80 backdrop-blur-xl border border-white/[0.1] shadow-[0_8px_32px_rgba(0,0,0,0.5),inset_0_1px_0_0_rgba(255,255,255,0.08)]">
-      <button onclick="setTheme('linear'); playClick();" class="dock-btn px-3 py-2 rounded-xl text-xs font-medium text-white bg-white/[0.1] flex items-center gap-1.5">
+      <button onclick="setTheme('linear'); playClick();" class="dock-btn px-3 py-2 rounded-xl text-xs font-medium text-white bg-white/[0.1] flex items-center gap-1.5 active:scale-[0.98] transition-transform duration-100">
         <i data-lucide="layers" class="w-3.5 h-3.5"></i>
         <span>Linear</span>
       </button>
-      <button onclick="setTheme('apple'); playClick();" class="dock-btn px-3 py-2 rounded-xl text-xs font-medium text-neutral-400 hover:text-white flex items-center gap-1.5">
+      <button onclick="setTheme('apple'); playClick();" class="dock-btn px-3 py-2 rounded-xl text-xs font-medium text-neutral-400 hover:text-white flex items-center gap-1.5 active:scale-[0.98] transition-transform duration-100">
         <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
         <span>Cupertino</span>
       </button>
-      <button onclick="setTheme('vercel'); playClick();" class="dock-btn px-3 py-2 rounded-xl text-xs font-medium text-neutral-400 hover:text-white flex items-center gap-1.5">
+      <button onclick="setTheme('vercel'); playClick();" class="dock-btn px-3 py-2 rounded-xl text-xs font-medium text-neutral-400 hover:text-white flex items-center gap-1.5 active:scale-[0.98] transition-transform duration-100">
         <i data-lucide="code" class="w-3.5 h-3.5"></i>
         <span>Vercel</span>
       </button>
-      <button onclick="setTheme('cyber'); playClick();" class="dock-btn px-3 py-2 rounded-xl text-xs font-medium text-neutral-400 hover:text-white flex items-center gap-1.5">
+      <button onclick="setTheme('cyber'); playClick();" class="dock-btn px-3 py-2 rounded-xl text-xs font-medium text-neutral-400 hover:text-white flex items-center gap-1.5 active:scale-[0.98] transition-transform duration-100">
         <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
         <span>Cyber</span>
       </button>
-      <button onclick="runAuditDemo(); playClick();" class="dock-btn px-3 py-2 rounded-xl text-xs font-medium text-amber-400 hover:text-amber-300 flex items-center gap-1.5">
+      <button onclick="runAuditDemo(); playClick();" class="dock-btn px-3 py-2 rounded-xl text-xs font-medium text-amber-400 hover:text-amber-300 flex items-center gap-1.5 active:scale-[0.98] transition-transform duration-100">
         <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
         <span>Audit</span>
       </button>
