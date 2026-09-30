@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lumina Ghost - Live Interactive Playground</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #09090b;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+  </style>
+</head>
+<body class="text-neutral-100 min-h-screen p-8 selection:bg-emerald-500/30">
+
+  <!-- Header Banner -->
+  <header class="max-w-4xl mx-auto mb-12 flex items-center justify-between border-b border-white/[0.08] pb-6">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 font-mono font-bold text-lg">
+        🛸
+      </div>
+      <div>
+        <h1 class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+          Lumina Ghost Playground
+          <span class="text-xs px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-mono font-normal border border-emerald-500/20">LIVE HUD</span>
+        </h1>
+        <p class="text-xs text-neutral-400">Hold <kbd class="px-1.5 py-0.5 rounded bg-white/10 text-white font-mono text-[11px]">Alt</kbd> (or <kbd class="px-1.5 py-0.5 rounded bg-white/10 text-white font-mono text-[11px]">Option</kbd>) and click ANY element below to summon the AI Capsule!</p>
+      </div>
+    </div>
+    <div class="hidden sm:block text-right">
+      <span class="text-xs font-mono text-neutral-500">TARGET: AGY & CLAUDE CODE</span>
+      <div class="text-[11px] text-emerald-400 font-mono">BRIDGE: :3939 ONLINE</div>
+    </div>
+  </header>
+
+  <!-- Interactive Sandbox Area -->
+  <main class="max-w-4xl mx-auto space-y-12">
+
+    <!-- Section 1: Generic AI-Slop Hero (Test Target) -->
+    <div class="p-8 rounded-2xl bg-neutral-900 border border-neutral-800 text-center relative overflow-hidden" id="hero-section">
+      <span class="text-xs font-mono uppercase tracking-wider text-neutral-500 block mb-2">TARGET 1: TYPICAL AI-SLOP SECTION</span>
+      <h2 class="text-4xl font-bold text-white">Unlock Next-Gen Hyper Scale AI Telemetry</h2>
+      <p class="text-neutral-400 text-sm mt-3 max-w-lg mx-auto">
+        This hero button below has the infamous purple-indigo gradient that screams "AI generated". Let's fix it with Ghost!
+      </p>
+
+      <div class="mt-8 flex justify-center gap-4">
+        <!-- Generic Purple Gradient Button (Click with Alt!) -->
+        <button id="cta-button" class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-500 text-white font-semibold text-sm shadow-lg hover:opacity-90">
+          Generic Purple AI Button [Alt + Click Me]
+        </button>
+
+        <button id="secondary-btn" class="px-6 py-3.5 rounded-xl bg-neutral-800 text-neutral-300 text-sm font-medium border border-neutral-700">
+          Secondary Flat Button
+        </button>
+      </div>
+    </div>
+
+    <!-- Section 2: 3-Symmetric Cards (Test Target) -->
+    <div>
+      <span class="text-xs font-mono uppercase tracking-wider text-neutral-500 block mb-4">TARGET 2: 3 SYMMETRIC UNCHAMFERED CARDS</span>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        
+        <!-- Card 1 -->
+        <div id="metric-card-1" class="p-6 rounded-xl bg-zinc-900 border border-zinc-800">
+          <div class="text-3xl font-bold text-white">$48,290</div>
+          <div class="text-xs text-zinc-400 mt-1">Total MRR Growth</div>
+          <p class="text-xs text-zinc-500 mt-4">Needs 1px chamfer highlight and spring hover micro-interaction.</p>
+        </div>
+
+        <!-- Card 2 -->
+        <div id="metric-card-2" class="p-6 rounded-xl bg-zinc-900 border border-zinc-800">
+          <div class="text-3xl font-bold text-white">99.98%</div>
+          <div class="text-xs text-zinc-400 mt-1">System Uptime</div>
+          <p class="text-xs text-zinc-500 mt-4">Flat and lifeless. Alt+Click to apply Apple Glass or Linear Polish!</p>
+        </div>
+
+        <!-- Card 3 -->
+        <div id="metric-card-3" class="p-6 rounded-xl bg-zinc-900 border border-zinc-800">
+          <div class="text-3xl font-bold text-white">1,420</div>
+          <div class="text-xs text-zinc-400 mt-1">Active Agents</div>
+          <p class="text-xs text-zinc-500 mt-4">Standard box without tactile depth.</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Instructions Guide -->
+    <div class="p-6 rounded-2xl bg-neutral-950 border border-white/[0.08] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]">
+      <h3 class="text-sm font-semibold text-white tracking-tight flex items-center gap-2">
+        <span class="text-emerald-400">⚡</span>
+        <span>How Lumina Ghost Works in Real Projects:</span>
+      </h3>
+      <ol class="mt-3 text-xs text-neutral-400 space-y-2 list-decimal list-inside">
+        <li>Run <code class="text-emerald-400 font-mono bg-white/[0.04] px-1.5 py-0.5 rounded">npx lumina-ghost</code> in your terminal.</li>
+        <li>Browse your app at <code class="text-neutral-300 font-mono">localhost:3000</code>.</li>
+        <li>Whenever an element looks off, press <kbd class="px-1 py-0.5 rounded bg-white/10 text-white font-mono text-[10px]">Alt + Click</kbd> on it.</li>
+        <li>Choose a polish preset or type a quick directive into the capsule.</li>
+        <li>AGY or Claude Code catches the intent via Tokenjar, refactors the source file, and HMR updates your screen instantly!</li>
+      </ol>
+    </div>
+
+  </main>
+
+  <!-- Load Lumina Ghost Client Script -->
+  <script src="/ghost.js"></script>
+  <!-- Fallback if served statically -->
+  <script src="./client.js"></script>
+</body>
+</html>

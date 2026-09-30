@@ -1,0 +1,27 @@
+{
+  "name": "lumina-ghost",
+  "version": "1.0.0",
+  "description": "In-Browser Visual AI HUD & Reverse-Agent Teleport for AGY & Claude Code",
+  "main": "ghost/server.js",
+  "bin": {
+    "lumina-ghost": "./bin/ghost.js",
+    "ghost": "./bin/ghost.js"
+  },
+  "scripts": {
+    "start": "node ghost/server.js",
+    "dev": "node ghost/server.js"
+  },
+  "keywords": [
+    "ai",
+    "frontend",
+    "antigravity",
+    "claude-code",
+    "design-system",
+    "hud",
+    "devtools",
+    "tailwind",
+    "linear"
+  ],
+  "author": "Lumina Team",
+  "license": "MIT"
+}

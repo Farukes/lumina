@@ -297,5 +297,18 @@ def showcase():
     else:
         console.print("[red]Showcase file not found.[/red]")
 
+# ---------------------------------------------------------------------------
+# COMMAND: GHOST (The In-Browser AI HUD & Reverse-Agent Teleport)
+# ---------------------------------------------------------------------------
+@main.command()
+@click.option("--no-browser", is_flag=True, help="Do not automatically open browser demo")
+def ghost(no_browser):
+    """Launch the Lumina Ghost in-browser AI HUD bridge (port 3939)."""
+    print_banner("Lumina Ghost // In-Browser AI HUD Bridge")
+    bridge_script = Path(__file__).parent.parent / "ghost" / "bridge.py"
+    from ghost.bridge import run_bridge
+    run_bridge(open_browser=not no_browser)
+
 if __name__ == "__main__":
     main()
+
