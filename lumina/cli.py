@@ -396,8 +396,15 @@ def fix_cmd(path, dry_run):
 # COMMAND: MCP (Model Context Protocol Server for AGY & Claude Code)
 # ---------------------------------------------------------------------------
 @main.command()
-def mcp():
+@click.option("--install", "-i", is_flag=True, help="Register Lumina MCP server into Antigravity & AI configs")
+def mcp(install):
     """Launch the Lumina Model Context Protocol (MCP) server over stdio."""
+    if install:
+        from lumina.core.installer import _register_mcp_configs
+        res = _register_mcp_configs()
+        for r in res:
+            console.print(f"[bold green]✔[/bold green] {r}")
+        return
     from mcp.server import main as run_mcp
     run_mcp()
 

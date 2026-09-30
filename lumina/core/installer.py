@@ -92,10 +92,15 @@ def install_lumina(repo: str = GITHUB_REPO, branch: str = "main") -> bool:
             sh_wrapper.chmod(0o755)
             _add_to_unix_path(str(LUMINA_BIN))
 
+        # 4. Automatically Register Lumina MCP Server into Antigravity & AI Assistants
+        mcp_registered = _register_mcp_configs()
+        mcp_summary = "\n".join([f"  • {m}" for m in mcp_registered]) if mcp_registered else "  • No existing MCP configs found"
+
         console.print(Panel(
             f"[bold green]✔ Lumina successfully installed globally![/bold green]\n\n"
             f"[bold white]Installation Path:[/bold white] [cyan]{LUMINA_HOME}[/cyan]\n"
             f"[bold white]Executable Binary:[/bold white] [cyan]{LUMINA_BIN}[/cyan]\n\n"
+            f"[bold white]MCP Integration:[/bold white]\n{mcp_summary}\n\n"
             f"[bold yellow]How to Use:[/bold yellow]\n"
             f"  1. Open any terminal or project directory.\n"
             f"  2. Type [bold white]lumina[/bold white] (or [bold white]lumina on[/bold white]) to get started!\n"
@@ -218,6 +223,11 @@ def _clean_mcp_configs() -> list:
     cleaned = []
     candidates = []
 
+    # Antigravity Global MCP: ~/.gemini/config/mcp_config.json
+    gemini_mcp_config = Path.home() / ".gemini" / "config" / "mcp_config.json"
+    if gemini_mcp_config.exists():
+        candidates.append(gemini_mcp_config)
+
     # Claude Desktop on Windows
     if sys.platform == "win32":
         appdata = os.environ.get("APPDATA")
@@ -257,4 +267,60 @@ def _clean_mcp_configs() -> list:
         cleaned.append("Removed Lumina MCP directory from AGY (other MCPs like tokenjar preserved)")
 
     return cleaned
+
+def _register_mcp_configs(cmd_executable: str = "lumina") -> list:
+    """Safely registers Lumina MCP server in Antigravity and Claude Desktop configs without touching other servers."""
+    registered = []
+    candidates = []
+
+    # 1. Antigravity Global MCP: ~/.gemini/config/mcp_config.json
+    gemini_dir = Path.home() / ".gemini"
+    if gemini_dir.exists():
+        gemini_config = gemini_dir / "config" / "mcp_config.json"
+        gemini_config.parent.mkdir(parents=True, exist_ok=True)
+        candidates.append(gemini_config)
+
+    # 2. Claude Desktop Config
+    if sys.platform == "win32":
+        appdata = os.environ.get("APPDATA")
+        if appdata and (Path(appdata) / "Claude").exists():
+            candidates.append(Path(appdata) / "Claude" / "claude_desktop_config.json")
+    else:
+        for p in [Path.home() / "Library" / "Application Support" / "Claude", Path.home() / ".config" / "claude"]:
+            if p.exists():
+                candidates.append(p / "claude_desktop_config.json")
+
+    # 3. Windsurf
+    windsurf_dir = Path.home() / ".codeium" / "windsurf"
+    if windsurf_dir.exists():
+        candidates.append(windsurf_dir / "mcp_config.json")
+
+    for config_path in candidates:
+        try:
+            data = {}
+            if config_path.exists() and config_path.is_file():
+                try:
+                    data = json.loads(config_path.read_text(encoding="utf-8"))
+                except Exception:
+                    data = {}
+            if not isinstance(data, dict):
+                data = {}
+
+            mcp_servers = data.get("mcpServers", {})
+            if not isinstance(mcp_servers, dict):
+                mcp_servers = {}
+
+            mcp_servers["lumina"] = {
+                "command": cmd_executable,
+                "args": ["mcp"]
+            }
+            data["mcpServers"] = mcp_servers
+
+            config_path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+            registered.append(f"Configured Lumina MCP in {config_path.name} (preserved all other MCP servers)")
+        except Exception:
+            pass
+
+    return registered
+
 

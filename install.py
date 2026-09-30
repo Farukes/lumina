@@ -96,6 +96,31 @@ def main():
                 with open(rc, "a", encoding="utf-8") as f:
                     f.write(f'\nexport PATH="$PATH:{LUMINA_BIN}"\n')
 
+    # 4. Register MCP Server
+    print("\n[4/4] Registering Lumina MCP Server in Antigravity & AI Assistants...")
+    try:
+        import json
+        gemini_dir = Path.home() / ".gemini"
+        if gemini_dir.exists():
+            gemini_config = gemini_dir / "config" / "mcp_config.json"
+            gemini_config.parent.mkdir(parents=True, exist_ok=True)
+            data = {}
+            if gemini_config.exists():
+                try:
+                    data = json.loads(gemini_config.read_text(encoding="utf-8"))
+                except Exception:
+                    data = {}
+            mcp_servers = data.get("mcpServers", {})
+            mcp_servers["lumina"] = {
+                "command": "lumina",
+                "args": ["mcp"]
+            }
+            data["mcpServers"] = mcp_servers
+            gemini_config.write_text(json.dumps(data, indent=2), encoding="utf-8")
+            print("  ✔ Configured Lumina MCP in Antigravity (~/.gemini/config/mcp_config.json)")
+    except Exception:
+        pass
+
     print("\n" + "=" * 60)
     print("✔ LUMINA SUCCESSFULLY INSTALLED GLOBALLY!")
     print("=" * 60)
