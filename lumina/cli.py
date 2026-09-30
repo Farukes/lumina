@@ -392,11 +392,11 @@ def mcp():
     run_mcp()
 
 # ---------------------------------------------------------------------------
-# COMMAND: OFF (Trace-Free Complete Uninstallation)
+# COMMAND: REMOVE / OFF (Trace-Free Complete Uninstallation)
 # ---------------------------------------------------------------------------
-@main.command(name="off")
-@click.option("--force", "-f", is_flag=True, help="Skip confirmation prompt")
-def off_cmd(force):
+@main.command(name="remove")
+@click.option("--force", "-f", is_flag=True, default=True, help="Skip confirmation prompt")
+def remove_cmd(force):
     """Remove all Lumina rules, tokens, and configs without leaving any trace."""
     import shutil
     print_banner("Trace-Free Uninstaller & Eject Engine")
@@ -474,6 +474,12 @@ def off_cmd(force):
         ))
     else:
         console.print("[yellow]No Lumina artifacts or configurations found in this directory.[/yellow]")
+
+@main.command(name="off")
+@click.pass_context
+def off_cmd(ctx):
+    """Alias for 'remove' command."""
+    ctx.invoke(remove_cmd)
 
 if __name__ == "__main__":
     main()
