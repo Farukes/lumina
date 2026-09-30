@@ -1,22 +1,43 @@
-# ⚡ LUMINA CLI — Premium AI Frontend Engine
-> **World-Class Frontend Architecture & Anti-AI-Slop Toolkit for AGY & Claude Code**
-> *Linear · Apple · Vercel · Stripe · Raycast Standards for AI-Assisted Developers*
+# 🛸 LUMINA GHOST & CLI — Premium AI Frontend Engine
+> **In-Browser AI HUD & Reverse-Agent Teleport for AGY & Claude Code**
+> *Linear · Apple · Vercel · Stripe · Raycast Standards for Terminal-First Developers*
 
 ---
 
 ## 🎯 Vizyon & Problem Tanımı
 
-Bugün **Google Antigravity CLI (AGY)** veya **Claude Code** ile frontend geliştirirken karşılaşılan en büyük problem modellerin kapasitesi değil, **"Zevk ve Kısıtlama Eksikliği" (Taste & Negative Constraints Void)**'dir. 
+Bugün **Google Antigravity CLI (AGY)** veya **Claude Code** ile frontend geliştirirken karşılaşılan en büyük işkence **"Asimetrik Alt-Tab Döngüsü"** ve **"Görsel Körlük"**tür:
+1. Terminalde ajana UI kodlatırsınız.
+2. `Alt + Tab` ile tarayıcıya (`localhost:3000`) geçip bakarsınız.
+3. Çirkin bir mor gradyan, orantısız padding veya mobilde taşan bir grid görürsünüz.
+4. Tekrar terminale dönüp görsel kusurları kelimelerle tarif etmeye çalışırsınız.
+5. Bu döngü 10 kez tekrarlanır ve geliştiriciyi tüketir.
 
-Yapay zeka varsayılan olarak şu **"AI Tells" (AI İpuçları)** ile kod üretir:
-* ❌ Standart mor/indigo gradyan butonlar (`from-purple-500 to-indigo-600`)
-* ❌ 3 adet birbirinin kopyası simetrik kart (`grid-cols-3` ile ruhsuz kutular)
-* ❌ 1px metalik pah kırma (chamfer highlight) ve derinlik içermeyen düz koyu kartlar
-* ❌ `tracking-tight` verilmemiş çiğ Inter fontları
-* ❌ Dokunma hissi (spring physics, active scale) olmayan ölü butonlar
-* ❌ Boş durum (empty state) ve yükleme iskeleti (shimmer skeleton) eksikliği
+**LUMINA GHOST**, geliştiriciyi hiçbir platforma hapsetmeden, yerel terminalinde ve git reposunda tutan; ancak **tarayıcıdaki `localhost` ile terminaldeki AGY/Claude Code arasına çift yönlü köprü kuran sıfır-kurulumlu bir araçtır.**
 
-**LUMINA CLI**, AGY ve Claude Code kullanan geliştiricilerin projelerine doğrudan entegre olarak yapay zekaya **"Tasarım Anayasası"** aşılar ve tek komutla Linear/Apple seviyesinde yaşayan bileşenler, lüks temalar ve kod denetimi sunar.
+---
+
+## 🛸 LUMINA GHOST: Nasıl Çalışır? (Tek Komutla)
+
+```bash
+# 1. Projenizin terminalinde çalıştırın:
+npx lumina-ghost
+# (veya: node bin/ghost.js)
+```
+
+Tarayıcınızda (`http://localhost:3000` veya `http://localhost:3939/demo`) gezinirken:
+1. Çirkin ya da düzeltilmesi gereken herhangi bir elemana **`Alt + Tık`** (Mac: `Option + Click`) yapın.
+2. Elemanın etrafında zümrüt renkli 1px metalik Apple/Linear chamfer çerçevesi parlar.
+3. Yanında minik **"Lumina Ghost Kapsülü"** belirir:
+   * **`[✨ Linear Polish]`**: Elemana anında 1px iç ışık (chamfer), koyu obsidian zemin ve yay fiziği (`active:scale-[0.98]`) basar.
+   * **`[🍏 Apple Glass]`**: Elemanı anında `backdrop-blur-2xl` ve squircle lüks cam panel yapar.
+   * **`[🧹 Purge AI Slop]`**: Mor gradyanı, untracked fontu ve çiğ kenarları tek tıkla süpürür.
+   * **`[📱 Fix Mobile]`**: Ekrandan taşan veya mobilde kırılan CSS'i toparlar.
+   * **Mikro-Prompt Kutusu**: *"Bu kartı Stripe fatura kartı gibi yap."*
+4. Kapsüldeki butona bastığınız an:
+   * Lumina Ghost yerel köprü üzerinden terminaldeki **AGY / Claude Code**'a hedef elemanın dosyasını, satırını ve hesaplanmış CSS'ini fırlatır (`.agents/tasks/ghost-intent.md`).
+   * **/tokenjar** MCP sunucusu (`find_symbol_global` ve `read_file_smart`) devreye girerek tam o bileşeni sıfır token israfıyla bulur.
+   * AGY kodu günceller, Vite HMR 30 milisaniyede tarayıcıyı yeniler ve Apple başarı sesi (chime) duyulur!
 
 ---
 
@@ -24,17 +45,17 @@ Yapay zeka varsayılan olarak şu **"AI Tells" (AI İpuçları)** ile kod üreti
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  1. Intelligence & Rules Layer (AGY Rules & Claude Skills)  │
+│  1. In-Browser AI HUD (Lumina Ghost)                        │
+│     Alt + Click Inspector · Instant Polish · Web Chime      │
+├─────────────────────────────────────────────────────────────┤
+│  2. Local Teleport Bridge (:3939 & .agents/tasks/)          │
+│     AGY & Claude Code Hot-Tasking · Tokenjar MCP Synergy    │
+├─────────────────────────────────────────────────────────────┤
+│  3. Living Design Constitution (Rules & DNA)                │
 │     .agents/rules/frontend.md  ·  CLAUDE.md  ·  SKILL.md    │
 ├─────────────────────────────────────────────────────────────┤
-│  2. Developer CLI Engine (Lumina CLI)                       │
-│     init · theme · add · audit · prompt · rules · showcase  │
-├─────────────────────────────────────────────────────────────┤
-│  3. AAA Component & Token Registry                          │
-│     Bento Grid · Command Palette · Floating Dock · Heroes   │
-├─────────────────────────────────────────────────────────────┤
-│  4. AI-Slop Codebase Auditor & Auto-Fix Synthesizer        │
-│     AST/Regex Scanner · Score 0-100 · ai-fix-prompt.md      │
+│  4. AAA Component Registry & AI-Slop Code Auditor           │
+│     Bento Grid · Command Palette · Score 0-100 Auto-Fix     │
 └─────────────────────────────────────────────────────────────┘
 ```
 
