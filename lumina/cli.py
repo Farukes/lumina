@@ -64,7 +64,8 @@ def main(ctx):
                     "🚀 Projeyi Başlat / Aç (lumina on)",
                     "🎨 Temayı Değiştir (lumina theme)",
                     "👁️ Canlı Vitrini Aç (lumina view)",
-                    "🧹 İz Bırakmadan Kaldır (lumina off)",
+                    "🧹 Projeden Kaldır (lumina remove)",
+                    "🗑️ Bütün Bilgisayardan Sil (lumina uninstall)",
                     "Çıkış"
                 ]
             ).ask()
@@ -78,8 +79,10 @@ def main(ctx):
                 ctx.invoke(theme)
             elif action and "view" in action:
                 ctx.invoke(view_cmd)
-            elif action and "off" in action:
-                ctx.invoke(off_cmd)
+            elif action and "remove" in action:
+                ctx.invoke(remove_cmd)
+            elif action and "uninstall" in action:
+                ctx.invoke(uninstall_cmd)
         except Exception:
             pass
 
@@ -475,11 +478,32 @@ def remove_cmd(force):
     else:
         console.print("[yellow]No Lumina artifacts or configurations found in this directory.[/yellow]")
 
-@main.command(name="off")
-@click.pass_context
-def off_cmd(ctx):
-    """Alias for 'remove' command."""
-    ctx.invoke(remove_cmd)
+@main.command(name="off", hidden=True)
+@click.option("--force", "-f", is_flag=True, default=True, help="Skip confirmation prompt")
+def off_cmd(force):
+    """Alias for remove."""
+    return remove_cmd(force)
+
+
+# ---------------------------------------------------------------------------
+# COMMAND: INSTALL (Download and Install Globally from GitHub)
+# ---------------------------------------------------------------------------
+@main.command(name="install")
+@click.option("--repo", "-r", default="omere/lumina", help="GitHub repository (user/repo)")
+@click.option("--branch", "-b", default="main", help="Git branch")
+def install_cmd(repo, branch):
+    """Download and install Lumina globally to your computer from GitHub."""
+    from lumina.core.installer import install_lumina
+    install_lumina(repo=repo, branch=branch)
+
+# ---------------------------------------------------------------------------
+# COMMAND: UNINSTALL (Completely Remove Lumina from Entire Computer)
+# ---------------------------------------------------------------------------
+@main.command(name="uninstall")
+def uninstall_cmd():
+    """Completely remove Lumina from your entire system without leaving any trace."""
+    from lumina.core.installer import uninstall_lumina
+    uninstall_lumina()
 
 if __name__ == "__main__":
     main()
