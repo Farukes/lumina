@@ -493,6 +493,41 @@ THEMES: Dict[str, ThemeDefinition] = {
     )
 }
 
+# Legal Trademark-Clean Original Aliases
+THEME_ALIASES: Dict[str, str] = {
+    "obsidian-craft": "linear-dark",
+    "pure-cupertino": "apple-clean",
+    "stark-monolith": "vercel-mono",
+    "fintech-horizon": "stripe-saas",
+    "amber-terminal": "cyber-tactile",
+    "industrial-machina": "teenage-industrial",
+    "parchment-editorial": "stripe-editorial",
+    "liquid-spatial": "spatial-glass",
+}
+
+# Register aliases into THEMES
+for alias_id, target_id in THEME_ALIASES.items():
+    if target_id in THEMES:
+        target_def = THEMES[target_id]
+        THEMES[alias_id] = ThemeDefinition(
+            id=alias_id,
+            name=target_def.name,
+            description=target_def.description,
+            archetype=target_def.archetype,
+            font_sans=target_def.font_sans,
+            font_mono=target_def.font_mono,
+            css_variables=target_def.css_variables,
+            tailwind_extensions=target_def.tailwind_extensions,
+            traits=target_def.traits
+        )
+
+def get_theme(theme_id: str) -> ThemeDefinition:
+    """Safely retrieves theme definition supporting both original and legacy keys."""
+    if theme_id in THEMES:
+        return THEMES[theme_id]
+    resolved = THEME_ALIASES.get(theme_id, "linear-dark")
+    return THEMES.get(resolved, THEMES["linear-dark"])
+
 SPRING_PHYSICS = {
     "snappy": {
         "description": "Linear/Raycast tactile snap with instantaneous feedback",

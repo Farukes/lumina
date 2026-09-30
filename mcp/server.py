@@ -15,7 +15,7 @@ from pathlib import Path
 # Add project root to sys.path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from lumina.core.themes import THEMES, SPRING_PHYSICS
+from lumina.core.themes import THEMES, SPRING_PHYSICS, get_theme
 from lumina.core.primitives import PRIMITIVES
 from lumina.core.grammar import GRAMMAR_PATTERNS
 from lumina.core.registry import COMPONENTS
@@ -127,7 +127,7 @@ def handle_call_tool(name: str, args: dict) -> dict:
         materiality = args.get("materiality", "metallic-chamfer")
         motion_id = args.get("motion_physics", "snappy")
 
-        theme_def = THEMES.get(arch_id, THEMES["linear-dark"])
+        theme_def = get_theme(arch_id)
         spring = SPRING_PHYSICS.get(motion_id, SPRING_PHYSICS["snappy"])
 
         # Density adaptations
