@@ -138,24 +138,46 @@ def uninstall_lumina() -> bool:
         removed_items.append(f"Deleted global directory ({LUMINA_HOME})")
 
     # 3. Clean current project directory artifacts if present
-    for target in [Path(".lumina"), Path(".agents/rules/frontend-premium.md"), Path(".claude/skills/frontend-design")]:
-        if target.exists():
-            if target.is_dir():
-                shutil.rmtree(target, ignore_errors=True)
-            else:
-                target.unlink(missing_ok=True)
-            removed_items.append(f"Cleaned project artifact ({target})")
+    lumina_cache = Path(".lumina")
+    if lumina_cache.exists():
+        shutil.rmtree(lumina_cache, ignore_errors=True)
+        removed_items.append("Deleted temporary .lumina directory")
 
-    # 4. Clean rules and globals.css in current directory
-    for rule_file in [Path("CLAUDE.md"), Path("GEMINI.md")]:
-        if rule_file.exists():
-            try:
-                content = rule_file.read_text(encoding="utf-8")
-                if "Lumina" in content:
-                    rule_file.unlink()
-                    removed_items.append(f"Removed {rule_file.name}")
-            except Exception:
-                pass
+    claude_skill = Path(".claude/skills/frontend-design")
+    if claude_skill.exists():
+        shutil.rmtree(claude_skill, ignore_errors=True)
+        removed_items.append("Cleaned .claude/skills/frontend-design")
+        try:
+            if not any(claude_skill.parent.iterdir()):
+                claude_skill.parent.rmdir()
+                if not any(claude_skill.parent.parent.iterdir()):
+                    claude_skill.parent.parent.rmdir()
+        except OSError:
+            pass
+
+    # Clean AGY rule safely: never delete other rules in .agents/
+    agy_rule = Path(".agents/rules/frontend-premium.md")
+    if agy_rule.exists():
+        agy_rule.unlink(missing_ok=True)
+        removed_items.append("Cleaned .agents/rules/frontend-premium.md")
+        try:
+            rules_dir = agy_rule.parent
+            if rules_dir.exists() and not any(rules_dir.iterdir()):
+                rules_dir.rmdir()
+                agents_dir = rules_dir.parent
+                if agents_dir.exists() and not any(agents_dir.iterdir()):
+                    agents_dir.rmdir()
+            elif rules_dir.exists():
+                removed_items.append("Preserved all other rules in .agents/rules/")
+        except OSError:
+            pass
+
+    # 4. Clean rules in current directory without touching user custom rules
+    from lumina.core.rules_generator import strip_lumina_from_rule_file
+    for rule_file in [Path("CLAUDE.md"), Path("GEMINI.md"), Path("AGENTS.md")]:
+        res = strip_lumina_from_rule_file(rule_file)
+        if res:
+            removed_items.append(res)
 
     # 5. Clean MCP configurations safely (leaves all other MCP servers 100% intact)
     mcp_cleaned = _clean_mcp_configs()

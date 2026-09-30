@@ -109,6 +109,55 @@ When writing UI components (React, Next.js, HTML, CSS):
    - Place composite blocks (Bento, Hero, Navigation) in `components/blocks/`.
 """
 
+LUMINA_MARKER_START = "<!-- START LUMINA FRONTEND CONSTITUTION -->"
+LUMINA_MARKER_END = "<!-- END LUMINA FRONTEND CONSTITUTION -->"
+
+def inject_or_replace_rule_section(target_file: Path, section_content: str, header: str = ""):
+    """Safely injects or updates Lumina rules in target_file without overwriting existing user rules."""
+    wrapped = f"{LUMINA_MARKER_START}\n{section_content.strip()}\n{LUMINA_MARKER_END}"
+    if target_file.exists():
+        existing = target_file.read_text(encoding="utf-8")
+        import re
+        pattern = re.compile(rf"\n?{re.escape(LUMINA_MARKER_START)}.*?{re.escape(LUMINA_MARKER_END)}\n?", re.DOTALL)
+        if pattern.search(existing):
+            new_content = pattern.sub(f"\n\n{wrapped}\n", existing)
+        else:
+            new_content = existing.rstrip() + f"\n\n{wrapped}\n"
+        target_file.write_text(new_content, encoding="utf-8")
+    else:
+        prefix = f"{header}\n\n" if header else ""
+        target_file.write_text(f"{prefix}{wrapped}\n", encoding="utf-8")
+
+def strip_lumina_from_rule_file(rule_file: Path) -> str:
+    """Removes Lumina rules from rule_file. Preserves any user custom rules; deletes the file only if completely empty."""
+    if not rule_file.exists():
+        return None
+    try:
+        content = rule_file.read_text(encoding="utf-8")
+        import re
+        # 1. Remove marker block
+        pattern = re.compile(rf"\n?{re.escape(LUMINA_MARKER_START)}.*?{re.escape(LUMINA_MARKER_END)}\n?", re.DOTALL)
+        cleaned = pattern.sub("", content)
+
+        # 2. Also remove legacy un-marked Lumina sections
+        if "Lumina Premium Standard" in cleaned or "THE LUMINA FRONTEND CONSTITUTION" in cleaned or "frontend-premium.md" in cleaned:
+            cleaned = re.sub(r'# Antigravity Project Context\s*See detailed frontend guidelines in `\.agents/rules/frontend-premium\.md`\.', '', cleaned)
+            cleaned = re.sub(r'# Project Guidelines for Claude Code & AI Assistants.*?## Design System: Lumina Premium Standard.*?(?=(\n# [^D]|\Z))', '', cleaned, flags=re.DOTALL)
+            cleaned = re.sub(r'## Design System: Lumina Premium Standard.*?(?=(\n## [^D]|\Z))', '', cleaned, flags=re.DOTALL)
+
+        cleaned = cleaned.strip()
+
+        if cleaned:
+            # User has custom rules in this file! PRESERVE THEM!
+            rule_file.write_text(cleaned + "\n", encoding="utf-8")
+            return f"Preserved custom rules in {rule_file.name} (stripped only Lumina section)"
+        else:
+            # File contained only Lumina rules, safe to delete
+            rule_file.unlink()
+            return f"Removed {rule_file.name} (contained only Lumina rules)"
+    except Exception:
+        return None
+
 def detect_installed_ai(target_dir: Path) -> dict:
     """Detects whether Antigravity (AGY) and/or Claude Code are present on the system/workspace."""
     has_claude_cli = bool(shutil.which("claude") or (Path.home() / ".claude").exists())
@@ -169,19 +218,20 @@ def inject_rules(target_dir: str = ".", ai_target: str = "auto") -> dict:
         created_files.append(str(agy_rule_path.relative_to(base)))
 
         gemini_path = base / "GEMINI.md"
-        gemini_content = f"# Antigravity Project Context\n\nSee detailed frontend guidelines in `.agents/rules/frontend-premium.md`.\n\n"
-        with open(gemini_path, "w", encoding="utf-8") as f:
-            f.write(gemini_content + CLAUDE_MD_CONTENT)
-        created_files.append("GEMINI.md")
+        inject_or_replace_rule_section(
+            gemini_path,
+            CLAUDE_MD_CONTENT,
+            header="# Antigravity Project Context\n\nSee detailed frontend guidelines in `.agents/rules/frontend-premium.md`."
+        )
+        created_files.append("GEMINI.md (preserves custom rules)")
     else:
         skipped_files.append("Claude Code detected only -> Antigravity rules skipped")
 
     # 2. Claude Code Rules (only if Claude is installed or requested)
     if install_claude:
         claude_path = base / "CLAUDE.md"
-        with open(claude_path, "w", encoding="utf-8") as f:
-            f.write(CLAUDE_MD_CONTENT)
-        created_files.append("CLAUDE.md")
+        inject_or_replace_rule_section(claude_path, CLAUDE_MD_CONTENT)
+        created_files.append("CLAUDE.md (preserves custom rules)")
 
         claude_skills_dir = base / ".claude" / "skills" / "frontend-design"
         claude_skills_dir.mkdir(parents=True, exist_ok=True)

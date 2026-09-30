@@ -431,10 +431,16 @@ def remove_cmd(force):
     if agy_rule.exists():
         agy_rule.unlink()
         removed_items.append(".agents/rules/frontend-premium.md (AGY rule)")
-        # remove parent dirs if empty
+        # remove parent dirs only if empty
         try:
-            agy_rule.parent.rmdir()
-            agy_rule.parent.parent.rmdir()
+            rules_dir = agy_rule.parent
+            if rules_dir.exists() and not any(rules_dir.iterdir()):
+                rules_dir.rmdir()
+                agents_dir = rules_dir.parent
+                if agents_dir.exists() and not any(agents_dir.iterdir()):
+                    agents_dir.rmdir()
+            elif rules_dir.exists():
+                removed_items.append("Preserved all other rules in .agents/rules/")
         except OSError:
             pass
 
@@ -444,21 +450,19 @@ def remove_cmd(force):
         shutil.rmtree(claude_skill, ignore_errors=True)
         removed_items.append(".claude/skills/frontend-design/ (Claude skill)")
         try:
-            claude_skill.parent.rmdir()
-            claude_skill.parent.parent.rmdir()
+            if not any(claude_skill.parent.iterdir()):
+                claude_skill.parent.rmdir()
+                if not any(claude_skill.parent.parent.iterdir()):
+                    claude_skill.parent.parent.rmdir()
         except OSError:
             pass
 
-    # 4. Remove or clean CLAUDE.md & GEMINI.md
-    for rule_file in [Path("CLAUDE.md"), Path("GEMINI.md")]:
-        if rule_file.exists():
-            try:
-                content = rule_file.read_text(encoding="utf-8")
-                if "Lumina" in content or "THE LUMINA FRONTEND CONSTITUTION" in content:
-                    rule_file.unlink()
-                    removed_items.append(f"{rule_file.name} (design guidelines)")
-            except Exception:
-                pass
+    # 4. Remove Lumina rules while 100% preserving user custom rules
+    from lumina.core.rules_generator import strip_lumina_from_rule_file
+    for rule_file in [Path("CLAUDE.md"), Path("GEMINI.md"), Path("AGENTS.md")]:
+        res = strip_lumina_from_rule_file(rule_file)
+        if res:
+            removed_items.append(res)
 
     # 5. Clean Lumina tokens from globals.css
     css_candidates = [Path("globals.css"), Path("styles/globals.css"), Path("src/app/globals.css")]
