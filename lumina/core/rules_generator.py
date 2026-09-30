@@ -3,6 +3,7 @@ Lumina Rules Generator - Injects Elite Design Directives for AGY & Claude Code
 Equips LLMs with the Lumina Generative Design Constitution and Luxury Archetypes.
 """
 import os
+import shutil
 from pathlib import Path
 
 AGY_FRONTEND_RULE = """---
@@ -108,41 +109,94 @@ When writing UI components (React, Next.js, HTML, CSS):
    - Place composite blocks (Bento, Hero, Navigation) in `components/blocks/`.
 """
 
-def inject_rules(target_dir: str = ".") -> dict:
-    """Injects AGY and Claude Code rule files into the target project directory."""
+def detect_installed_ai(target_dir: Path) -> dict:
+    """Detects whether Antigravity (AGY) and/or Claude Code are present on the system/workspace."""
+    has_claude_cli = bool(shutil.which("claude") or (Path.home() / ".claude").exists())
+    has_agy_cli = bool(shutil.which("agy") or (Path.home() / ".gemini").exists())
+
+    # 1. If one is installed on the machine and the other is not, respect the machine environment
+    if has_agy_cli and not has_claude_cli:
+        return {"agy": True, "claude": False}
+    if has_claude_cli and not has_agy_cli:
+        return {"agy": False, "claude": True}
+
+    # 2. Check project directory clues if CLI tools aren't exclusively found
+    has_claude_proj = bool((target_dir / ".claude").exists() or (target_dir / "CLAUDE.md").exists())
+    has_agy_proj = bool((target_dir / ".agents").exists() or (target_dir / "GEMINI.md").exists())
+
+    if has_agy_proj and not has_claude_proj:
+        return {"agy": True, "claude": False}
+    if has_claude_proj and not has_agy_proj:
+        return {"agy": False, "claude": True}
+
+    return {"agy": has_agy_cli or has_agy_proj, "claude": has_claude_cli or has_claude_proj}
+
+def inject_rules(target_dir: str = ".", ai_target: str = "auto") -> dict:
+    """Injects AGY and/or Claude Code rule files depending on detected or specified AI tool."""
     base = Path(target_dir).resolve()
     created_files = []
+    skipped_files = []
 
-    # 1. AGY Rule: .agents/rules/frontend-premium.md
-    agents_rules_dir = base / ".agents" / "rules"
-    agents_rules_dir.mkdir(parents=True, exist_ok=True)
-    agy_rule_path = agents_rules_dir / "frontend-premium.md"
-    with open(agy_rule_path, "w", encoding="utf-8") as f:
-        f.write(AGY_FRONTEND_RULE)
-    created_files.append(str(agy_rule_path.relative_to(base)))
+    ai_info = detect_installed_ai(base)
+    
+    install_agy = False
+    install_claude = False
 
-    # 2. Project GEMINI.md (Root rule for Antigravity)
-    gemini_path = base / "GEMINI.md"
-    gemini_content = f"# Antigravity Project Context\n\nSee detailed frontend guidelines in `.agents/rules/frontend-premium.md`.\n\n"
-    with open(gemini_path, "w", encoding="utf-8") as f:
-        f.write(gemini_content + CLAUDE_MD_CONTENT)
-    created_files.append("GEMINI.md")
+    if ai_target == "agy":
+        install_agy = True
+    elif ai_target == "claude":
+        install_claude = True
+    elif ai_target in ("both", "all"):
+        install_agy = True
+        install_claude = True
+    else:  # auto
+        if ai_info["agy"] and not ai_info["claude"]:
+            install_agy = True
+        elif ai_info["claude"] and not ai_info["agy"]:
+            install_claude = True
+        else:
+            # If both or neither detected, install for both to ensure compatibility
+            install_agy = True
+            install_claude = True
 
-    # 3. Claude Code: CLAUDE.md
-    claude_path = base / "CLAUDE.md"
-    with open(claude_path, "w", encoding="utf-8") as f:
-        f.write(CLAUDE_MD_CONTENT)
-    created_files.append("CLAUDE.md")
+    # 1. AGY Rules
+    if install_agy:
+        agents_rules_dir = base / ".agents" / "rules"
+        agents_rules_dir.mkdir(parents=True, exist_ok=True)
+        agy_rule_path = agents_rules_dir / "frontend-premium.md"
+        with open(agy_rule_path, "w", encoding="utf-8") as f:
+            f.write(AGY_FRONTEND_RULE)
+        created_files.append(str(agy_rule_path.relative_to(base)))
 
-    # 4. Claude Code Skill: .claude/skills/frontend-design/SKILL.md
-    claude_skills_dir = base / ".claude" / "skills" / "frontend-design"
-    claude_skills_dir.mkdir(parents=True, exist_ok=True)
-    claude_skill_path = claude_skills_dir / "SKILL.md"
-    with open(claude_skill_path, "w", encoding="utf-8") as f:
-        f.write(AGY_FRONTEND_RULE)
-    created_files.append(str(claude_skill_path.relative_to(base)))
+        gemini_path = base / "GEMINI.md"
+        gemini_content = f"# Antigravity Project Context\n\nSee detailed frontend guidelines in `.agents/rules/frontend-premium.md`.\n\n"
+        with open(gemini_path, "w", encoding="utf-8") as f:
+            f.write(gemini_content + CLAUDE_MD_CONTENT)
+        created_files.append("GEMINI.md")
+    else:
+        skipped_files.append("Claude Code detected only -> Antigravity rules skipped")
+
+    # 2. Claude Code Rules (only if Claude is installed or requested)
+    if install_claude:
+        claude_path = base / "CLAUDE.md"
+        with open(claude_path, "w", encoding="utf-8") as f:
+            f.write(CLAUDE_MD_CONTENT)
+        created_files.append("CLAUDE.md")
+
+        claude_skills_dir = base / ".claude" / "skills" / "frontend-design"
+        claude_skills_dir.mkdir(parents=True, exist_ok=True)
+        claude_skill_path = claude_skills_dir / "SKILL.md"
+        with open(claude_skill_path, "w", encoding="utf-8") as f:
+            f.write(AGY_FRONTEND_RULE)
+        created_files.append(str(claude_skill_path.relative_to(base)))
+    else:
+        skipped_files.append("Antigravity detected only -> Claude Code files (CLAUDE.md, .claude/) skipped")
 
     return {
         "status": "success",
-        "created_files": created_files
+        "created_files": created_files,
+        "skipped_files": skipped_files,
+        "installed_agy": install_agy,
+        "installed_claude": install_claude
     }
+

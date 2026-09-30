@@ -91,8 +91,9 @@ def main(ctx):
 # ---------------------------------------------------------------------------
 @main.command(name="on")
 @click.option("--theme", "-t", default=None, help="Theme ID (e.g. obsidian-craft, industrial-machina, liquid-spatial)")
+@click.option("--ai", default="auto", type=click.Choice(["auto", "agy", "claude", "both"]), help="Target AI assistant: auto (detected), agy, claude, or both")
 @click.option("--force", "-f", is_flag=True, help="Force overwrite existing configurations")
-def on_cmd(theme, force):
+def on_cmd(theme, ai, force):
     """Enable Lumina in the current workspace with AGY/Claude rules & theme tokens."""
     print_banner("Project Scaffolding & AI Rule Injection")
 
@@ -123,8 +124,8 @@ def on_cmd(theme, force):
         console=console
     ) as progress:
         # Task 1: Ingest Rules
-        t1 = progress.add_task("Injecting AGY & Claude Code design constitutions...", total=1)
-        res = inject_rules(".")
+        t1 = progress.add_task("Injecting AI design constitutions...", total=1)
+        res = inject_rules(".", ai_target=ai)
         progress.update(t1, advance=1)
 
         # Task 2: Inject Theme CSS
@@ -140,15 +141,21 @@ def on_cmd(theme, force):
             f.write("\n")
         progress.update(t2, advance=1)
 
+    rules_summary = [f"  • {f}" for f in res["created_files"]]
+    if res.get("skipped_files"):
+        rules_summary.append("  [dim]• Sistemde bulunmayan AI araçları için gereksiz dosya üretilmedi:[/dim]")
+        for skip_note in res["skipped_files"]:
+            rules_summary.append(f"    [dim]- {skip_note}[/dim]")
+
     console.print(Panel(
         f"[bold green]✔ Lumina successfully initialized in this project![/bold green]\n\n"
         f"[bold cyan]Selected Theme:[/bold cyan] {theme_def.name} ({theme_def.archetype})\n"
         f"[bold cyan]Active Rules:[/bold cyan]\n"
-        + "\n".join([f"  • {f}" for f in res["created_files"]]) +
+        + "\n".join(rules_summary) +
         f"\n  • {css_file}\n\n"
         f"[bold yellow]Next Steps:[/bold yellow]\n"
         f"  1. Run [bold white]lumina add bento-grid[/bold white] to inject world-class components.\n"
-        f"  2. Run [bold white]lumina audit[/bold white] to check existing code for AI-slop.\n"
+        f"  2. Run [bold white]lumina fix[/bold white] to polish existing code for AI-slop.\n"
         f"  3. Ask AGY or Claude Code to build UI; it now automatically follows the Lumina Constitution!",
         title="[bold blue]Setup Complete[/bold blue]",
         border_style="green"
@@ -462,6 +469,14 @@ def remove_cmd(force):
                     removed_items.append(f"{css_file} (stripped Lumina CSS tokens)")
             except Exception:
                 pass
+
+    # 6. Safely clean MCP configuration (never touches any other MCP server)
+    try:
+        from lumina.core.installer import _clean_mcp_configs
+        mcp_cleaned = _clean_mcp_configs()
+        removed_items.extend(mcp_cleaned)
+    except Exception:
+        pass
 
     if removed_items:
         table = Table(title="Cleaned Artifacts (Zero Traces Remaining)", border_style="green")

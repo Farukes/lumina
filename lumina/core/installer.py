@@ -10,6 +10,7 @@ import subprocess
 import urllib.request
 import zipfile
 import io
+import json
 from pathlib import Path
 from rich.console import Console
 from rich.panel import Panel
@@ -151,6 +152,10 @@ def uninstall_lumina() -> bool:
             except Exception:
                 pass
 
+    # 5. Clean MCP configurations safely (leaves all other MCP servers 100% intact)
+    mcp_cleaned = _clean_mcp_configs()
+    removed_items.extend(mcp_cleaned)
+
     table = Table(title="Uninstalled Artifacts (Zero Traces Remaining)", border_style="green")
     table.add_column("Cleaned System Location", style="bold green")
     for item in removed_items:
@@ -207,3 +212,49 @@ def _remove_from_unix_path(bin_dir: str) -> bool:
                 new_content = "\n".join([line for line in content.splitlines() if bin_dir not in line])
                 rc.write_text(new_content + "\n", encoding="utf-8")
     return True
+
+def _clean_mcp_configs() -> list:
+    """Safely removes Lumina from any MCP configuration files, leaving all other MCP servers 100% untouched."""
+    cleaned = []
+    candidates = []
+
+    # Claude Desktop on Windows
+    if sys.platform == "win32":
+        appdata = os.environ.get("APPDATA")
+        if appdata:
+            candidates.append(Path(appdata) / "Claude" / "claude_desktop_config.json")
+    else:
+        # macOS / Linux
+        candidates.append(Path.home() / "Library" / "Application Support" / "Claude" / "claude_desktop_config.json")
+        candidates.append(Path.home() / ".config" / "claude" / "claude_desktop_config.json")
+
+    # Windsurf, Cursor, Workspace .mcp.json
+    candidates.append(Path.home() / ".codeium" / "windsurf" / "mcp_config.json")
+    candidates.append(Path(".mcp.json"))
+    candidates.append(Path(".cursor") / "mcp.json")
+
+    for config_path in candidates:
+        if config_path.exists() and config_path.is_file():
+            try:
+                data = json.loads(config_path.read_text(encoding="utf-8"))
+                mcp_servers = data.get("mcpServers", {})
+                removed_keys = []
+                for key in list(mcp_servers.keys()):
+                    if "lumina" in key.lower():
+                        del mcp_servers[key]
+                        removed_keys.append(key)
+                if removed_keys:
+                    data["mcpServers"] = mcp_servers
+                    config_path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+                    cleaned.append(f"Safely removed '{', '.join(removed_keys)}' from {config_path.name} (other MCP servers preserved)")
+            except Exception:
+                pass
+
+    # AGY MCP directory: ~/.gemini/antigravity-cli/mcp/lumina
+    agy_mcp_lumina = Path.home() / ".gemini" / "antigravity-cli" / "mcp" / "lumina"
+    if agy_mcp_lumina.exists() and agy_mcp_lumina.is_dir():
+        shutil.rmtree(agy_mcp_lumina, ignore_errors=True)
+        cleaned.append("Removed Lumina MCP directory from AGY (other MCPs like tokenjar preserved)")
+
+    return cleaned
+
