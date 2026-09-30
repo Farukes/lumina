@@ -34,11 +34,54 @@ from lumina.core.prompt_engine import generate_prompt, PROMPT_TEMPLATES
 
 console = Console()
 
-@click.group()
-@click.version_option("1.0.0", prog_name="lumina")
-def main():
-    """Lumina CLI - Premium Frontend Engine for AGY & Claude Code."""
-    pass
+@click.group(invoke_without_command=True)
+@click.pass_context
+@click.version_option("2.0.0", prog_name="lumina")
+def main(ctx):
+    """Lumina CLI - The World-Class Frontend Engine for AGY & Claude Code."""
+    if ctx.invoked_subcommand is None:
+        print_banner("Ultra-Simplified CLI // Master Control")
+        console.print(Panel(
+            "[bold white]⚡ LUMINA CORE COMMANDS (Sadece 4 Temel Komut):[/bold white]\n\n"
+            "  [bold green]lumina on[/bold green]     [dim]➔[/dim]  [cyan]Başlat:[/cyan] Projeye lüks tasarım kurallarını ve tema tokenlarını enjekte eder\n"
+            "  [bold green]lumina fix[/bold green]    [dim]➔[/dim]  [cyan]Düzelt:[/cyan] Kodundaki tüm AI-slop (mor gradyan, eksik pah vb.) hatalarını otomatik refactor eder\n"
+            "  [bold green]lumina check[/bold green]  [dim]➔[/dim]  [cyan]Kontrol Et:[/cyan] Kod tabanını tarar, 0-100 arası tasarım kalitesi puanı verir\n"
+            "  [bold green]lumina off[/bold green]    [dim]➔[/dim]  [cyan]Kaldır:[/cyan] Projeden iz bırakmadan Lumina'yı tamamen temizler\n\n"
+            "[bold white]🛠️ Hızlı Yardımcılar:[/bold white]\n"
+            "  [bold yellow]lumina theme[/bold yellow]  [dim]➔[/dim]  9 lüks arketip arasında geçiş yap\n"
+            "  [bold yellow]lumina view[/bold yellow]   [dim]➔[/dim]  Canlı interaktif vitrini tarayıcıda aç\n"
+            "  [bold yellow]lumina add[/bold yellow]    [dim]➔[/dim]  Hazır AAA bileşen ekle (bento-grid, command-bar)\n",
+            title="[bold green]Lumina CLI Quick Guide[/bold green]",
+            border_style="green"
+        ))
+        try:
+            import questionary
+            action = questionary.select(
+                "Ne yapmak istersiniz?",
+                choices=[
+                    "✨ Kodları Düzelt & Parlat (lumina fix)",
+                    "🔍 Tasarım Puanını Ölç (lumina check)",
+                    "🚀 Projeyi Başlat / Aç (lumina on)",
+                    "🎨 Temayı Değiştir (lumina theme)",
+                    "👁️ Canlı Vitrini Aç (lumina view)",
+                    "🧹 İz Bırakmadan Kaldır (lumina off)",
+                    "Çıkış"
+                ]
+            ).ask()
+            if action and "fix" in action:
+                ctx.invoke(fix)
+            elif action and "check" in action:
+                ctx.invoke(check)
+            elif action and "on" in action:
+                ctx.invoke(on_cmd)
+            elif action and "theme" in action:
+                ctx.invoke(theme)
+            elif action and "view" in action:
+                ctx.invoke(view_cmd)
+            elif action and "off" in action:
+                ctx.invoke(off_cmd)
+        except Exception:
+            pass
 
 # ---------------------------------------------------------------------------
 # COMMAND: INIT
@@ -437,6 +480,45 @@ def clean(force):
 def eject(ctx):
     """Alias for 'clean' command."""
     ctx.invoke(clean)
+
+# ===========================================================================
+# SIMPLIFIED PRIMARY COMMANDS (The 4 Core Flagship Verbs)
+# ===========================================================================
+@main.command(name="on")
+@click.option("--theme", "-t", default=None, help="Theme ID")
+@click.option("--force", "-f", is_flag=True, help="Force overwrite")
+@click.pass_context
+def on_cmd(ctx, theme, force):
+    """[Flagship] Enable Lumina in project (inject rules & tokens)."""
+    ctx.invoke(init, theme=theme, force=force)
+
+@main.command(name="fix")
+@click.option("--path", "-p", default=".", help="Directory to polish")
+@click.option("--dry-run", is_flag=True, help="Preview changes without saving")
+@click.pass_context
+def fix(ctx, path, dry_run):
+    """[Flagship] Auto-fix and polish all AI-slop in codebase."""
+    ctx.invoke(polish, path=path, dry_run=dry_run)
+
+@main.command(name="check")
+@click.option("--path", "-p", default=".", help="Directory to scan")
+@click.pass_context
+def check(ctx, path):
+    """[Flagship] Check codebase for design defects (0-100 score)."""
+    ctx.invoke(audit, path=path)
+
+@main.command(name="off")
+@click.option("--force", "-f", is_flag=True, help="Skip confirmation")
+@click.pass_context
+def off_cmd(ctx, force):
+    """[Flagship] Turn off Lumina and clean all traces completely."""
+    ctx.invoke(clean, force=force)
+
+@main.command(name="view")
+@click.pass_context
+def view_cmd(ctx):
+    """[Flagship] Launch interactive live showcase in browser."""
+    ctx.invoke(showcase)
 
 if __name__ == "__main__":
     main()
