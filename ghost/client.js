@@ -280,34 +280,61 @@
     };
 
     // Client-side Instant Preview (Optimistic Feedback)
-    if (actionType === 'linear-polish') {
+    const promptLower = (promptText || '').toLowerCase();
+    const isLinear = actionType === 'linear-polish' || promptLower.includes('linear') || promptLower.includes('chamfer');
+    const isApple = actionType === 'apple-glass' || promptLower.includes('apple') || promptLower.includes('glass');
+    const isPurge = actionType === 'purge-slop' || promptLower.includes('slop') || promptLower.includes('purple');
+
+    if (isLinear) {
       activeElement.style.border = '1px solid rgba(255, 255, 255, 0.08)';
-      activeElement.style.boxShadow = 'inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 10px 30px rgba(0, 0, 0, 0.5)';
-      activeElement.style.borderRadius = '12px';
-      activeElement.style.transition = 'transform 0.1s ease-out';
-      activeElement.onmousedown = () => activeElement.style.transform = 'scale(0.98)';
-      activeElement.onmouseup = () => activeElement.style.transform = 'scale(1)';
-    } else if (actionType === 'apple-glass') {
-      activeElement.style.backdropFilter = 'blur(20px)';
-      activeElement.style.backgroundColor = 'rgba(255, 255, 255, 0.06)';
-      activeElement.style.borderRadius = '20px';
+      activeElement.style.boxShadow = 'inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 20px 50px rgba(0, 0, 0, 0.6)';
+      activeElement.style.borderRadius = '16px';
+      activeElement.style.backgroundColor = 'rgba(10, 10, 14, 0.95)';
+      activeElement.style.transition = 'all 0.2s ease-out';
+      
+      // If it's a container with buttons, polish the children too!
+      activeElement.querySelectorAll('button').forEach(b => {
+        b.className = 'px-6 py-3 rounded-xl bg-white hover:bg-neutral-100 text-neutral-950 font-semibold text-sm shadow-[0_1px_2px_rgba(0,0,0,0.1),0_0_20px_rgba(255,255,255,0.15)] active:scale-[0.98] transition-all inline-flex items-center gap-2';
+        b.style.background = '#ffffff';
+        b.style.color = '#09090b';
+      });
+
+      if (activeElement.tagName === 'BUTTON') {
+        activeElement.className = 'px-6 py-3 rounded-xl bg-white hover:bg-neutral-100 text-neutral-950 font-semibold text-sm shadow-[0_1px_2px_rgba(0,0,0,0.1),0_0_20px_rgba(255,255,255,0.15)] active:scale-[0.98] transition-all inline-flex items-center gap-2';
+        activeElement.style.background = '#ffffff';
+        activeElement.style.color = '#09090b';
+      }
+    } else if (isApple) {
+      activeElement.style.backdropFilter = 'blur(24px)';
+      activeElement.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
+      activeElement.style.borderRadius = '24px';
       activeElement.style.border = '1px solid rgba(255, 255, 255, 0.15)';
-    } else if (actionType === 'purge-slop') {
-      activeElement.className = activeElement.className.replace(/from-purple-\d+|to-indigo-\d+|from-indigo-\d+|bg-gradient-[^ ]+/g, 'bg-neutral-950 border border-white/10');
+      activeElement.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.3)';
+    } else if (isPurge) {
+      activeElement.className = activeElement.className.replace(/from-purple-\d+|to-indigo-\d+|from-indigo-\d+|to-pink-\d+|bg-gradient-[^ ]+/g, 'bg-neutral-950 border border-white/10 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]');
     }
 
     playChime(true);
-    showToast(`Teleported "${promptText}" to AGY & Claude Code!`);
+    showToast(`Teleporting "${promptText}" to AGY & Claude Code...`);
     hideCapsule();
 
     // Dispatch to local bridge server
     try {
-      await fetch(`${BRIDGE_URL}/api/intent`, {
+      const res = await fetch(`${BRIDGE_URL}/api/intent`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
+      const data = await res.json();
+      if (data.patched) {
+        showToast(`✔ Applied & Saved directly to disk! Refreshing...`);
+        setTimeout(() => window.location.reload(), 600);
+      } else {
+        showToast(`✔ Queued for AGY & Claude Code!`);
+      }
     } catch (err) {
+      console.warn('[Lumina Ghost] Local bridge error:', err);
+    }
       console.warn('[Lumina Ghost] Local bridge not responding on :3939. Intent logged locally.');
     }
   }

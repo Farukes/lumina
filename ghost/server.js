@@ -112,11 +112,51 @@ Page URL: ${intent.pageUrl}
 `;
 
         fs.writeFileSync(taskFile, taskContent, 'utf-8');
-        console.log(`\x1b[32m✔ Queued task for AGY & Claude Code -> \x1b[4m.agents/tasks/ghost-intent.md\x1b[0m\n`);
+        console.log(`\x1b[32m✔ Queued task for AGY & Claude Code -> \x1b[4m.agents/tasks/ghost-intent.md\x1b[0m`);
+
+        // LIVE DISK AUTO-PATCHER ENGINE
+        let patched = false;
+        try {
+          if (fs.existsSync(DEMO_HTML_PATH)) {
+            let html = fs.readFileSync(DEMO_HTML_PATH, 'utf-8');
+            const targetId = intent.target.id;
+            const promptLower = (intent.prompt || '').toLowerCase();
+            const action = intent.action;
+
+            if (action === 'linear-polish' || promptLower.includes('linear') || promptLower.includes('chamfer')) {
+              if (targetId === 'cta-button') {
+                html = html.replace(/id="cta-button"[^>]*>[\s\S]*?<\/button>/,
+                  `id="cta-button" class="px-6 py-3 rounded-xl bg-white hover:bg-neutral-100 text-neutral-950 font-semibold text-sm shadow-[0_1px_2px_rgba(0,0,0,0.1),0_0_20px_rgba(255,255,255,0.15)] active:scale-[0.98] transition-all flex items-center gap-2"><span>Deploy Telemetry Node</span><kbd class="text-[10px] font-mono px-1 rounded bg-black/10">⌘D</kbd></button>`);
+                patched = true;
+              } else if (targetId === 'hero-section' || targetId === 'secondary-btn') {
+                html = html.replace(/class="p-8 rounded-2xl bg-neutral-900 border border-neutral-800/, 
+                  'class="p-10 rounded-2xl bg-neutral-950/90 border border-white/[0.08] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_20px_50px_rgba(0,0,0,0.6)]');
+                patched = true;
+              }
+            } else if (action === 'apple-glass' || promptLower.includes('apple')) {
+              if (targetId === 'hero-section') {
+                html = html.replace(/id="hero-section" class="[^"]*"/, 
+                  `id="hero-section" class="p-10 rounded-3xl bg-white/[0.05] backdrop-blur-2xl border border-white/[0.15] shadow-[0_8px_32px_rgba(0,0,0,0.37)] text-center relative overflow-hidden group"`);
+                patched = true;
+              }
+            } else if (action === 'purge-slop' || promptLower.includes('slop')) {
+              html = html.replace(/from-purple-\d+|to-indigo-\d+|from-indigo-\d+|to-pink-\d+/g, 'from-neutral-900 to-neutral-950 border border-white/10');
+              patched = true;
+            }
+
+            if (patched) {
+              fs.writeFileSync(DEMO_HTML_PATH, html, 'utf-8');
+              console.log(`\x1b[1m\x1b[32m✔ Auto-Patched ${targetId || 'target'} directly in demo.html on disk!\x1b[0m\n`);
+            }
+          }
+        } catch (patchErr) {
+          console.error('Auto-patch error:', patchErr);
+        }
 
         return sendJson(res, 200, {
           success: true,
-          message: 'Intent received and queued for AGY & Claude Code',
+          patched: patched,
+          message: patched ? 'Source file patched on disk!' : 'Intent received and queued for AGY & Claude Code',
           taskPath: '.agents/tasks/ghost-intent.md'
         });
       } catch (err) {

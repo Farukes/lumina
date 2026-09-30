@@ -1,6 +1,6 @@
 # 🛸 LUMINA GHOST: VISUAL INTENT DIRECTIVE
-Timestamp: 2026-09-30T18:09:01.6812453+03:00
-Page URL: http://localhost:3000
+Timestamp: 2026-09-30T18:15:06.8079617+03:00
+Page URL: http://localhost:3939/demo
 
 ## 🎯 Target Component
 - **Component / Name:** `HeroCTA`
@@ -10,7 +10,7 @@ Page URL: http://localhost:3000
 
 ## ⚡ User Action & Directive
 - **Action Type:** `linear-polish`
-- **Instructions:** Apply 1px metallic chamfer, obsidian depth and spring active scale
+- **Instructions:** make this feel linear
 
 ## 🎨 Recommended Fixes:
 1. If Linear Polish: Add 1px chamfer (`border border-white/[0.08] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]`), dark obsidian background, and spring active scale (`active:scale-[0.98]`).
