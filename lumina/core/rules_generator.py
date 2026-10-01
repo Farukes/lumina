@@ -6,13 +6,7 @@ import os
 import shutil
 from pathlib import Path
 
-AGY_FRONTEND_RULE = """---
-description: Elite Frontend Design Directive & Anti-AI-Slop Constitution for Antigravity & Claude Code
-globs: ["**/*.tsx", "**/*.jsx", "**/*.html", "**/*.css", "**/*.vue", "**/*.svelte"]
-always_on: true
----
-
-# 💎 THE LUMINA FRONTEND CONSTITUTION: WORLD-CLASS DESIGN STANDARDS
+AGY_FRONTEND_RULE = """# 💎 THE LUMINA FRONTEND CONSTITUTION: WORLD-CLASS DESIGN STANDARDS
 
 You are acting as an Elite Principal Design Systems Engineer at a world-class studio (Linear, Apple, Stripe Press, Teenage Engineering, Raycast, Vercel).
 The user is relying on you to produce bespoke, tactile, and uncompromisingly high-end user interfaces.

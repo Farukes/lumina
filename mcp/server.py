@@ -12,6 +12,15 @@ import sys
 import json
 from pathlib import Path
 
+# Ensure UTF-8 stdio on Windows
+if sys.platform == "win32":
+    try:
+        sys.stdin.reconfigure(encoding="utf-8", errors="replace")
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 # Add project root to sys.path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -239,79 +248,105 @@ def handle_call_tool(name: str, args: dict) -> dict:
     return {"error": f"Unknown tool: {name}"}
 
 def main():
-    """Simple JSON-RPC 2.0 stdio server for Model Context Protocol."""
+    """Production-grade JSON-RPC 2.0 stdio server compliant with Model Context Protocol."""
     for line in sys.stdin:
         line = line.strip()
         if not line:
             continue
         try:
             req = json.loads(line)
-            req_id = req.get("id")
-            method = req.get("method")
-            params = req.get("params", {})
+        except Exception:
+            continue
 
-            if method == "initialize":
-                res = {
-                    "jsonrpc": "2.0",
-                    "id": req_id,
-                    "result": {
-                        "protocolVersion": "2024-11-05",
-                        "capabilities": {
-                            "tools": {}
-                        },
-                        "serverInfo": {
-                            "name": "lumina-design-mcp",
-                            "version": "2.0.0"
-                        }
-                    }
-                }
-            elif method == "tools/list":
-                res = {
-                    "jsonrpc": "2.0",
-                    "id": req_id,
-                    "result": {
-                        "tools": TOOLS
-                    }
-                }
-            elif method == "tools/call":
-                tool_name = params.get("name")
-                tool_args = params.get("arguments", {})
-                tool_res = handle_call_tool(tool_name, tool_args)
-                res = {
-                    "jsonrpc": "2.0",
-                    "id": req_id,
-                    "result": {
-                        "content": [
-                            {
-                                "type": "text",
-                                "text": json.dumps(tool_res, indent=2)
-                            }
-                        ]
-                    }
-                }
-            else:
-                res = {
-                    "jsonrpc": "2.0",
-                    "id": req_id,
-                    "error": {
-                        "code": -32601,
-                        "message": f"Method not found: {method}"
-                    }
-                }
+        req_id = req.get("id")
+        method = req.get("method")
+        params = req.get("params", {})
 
-            sys.stdout.write(json.dumps(res) + "\n")
-            sys.stdout.flush()
-        except Exception as e:
-            err_res = {
+        # In JSON-RPC 2.0 / MCP: Notifications have NO 'id' and MUST NOT receive any response!
+        is_notification = (req_id is None) or (method and method.startswith("notifications/"))
+
+        if method == "initialize":
+            res = {
                 "jsonrpc": "2.0",
-                "id": None,
-                "error": {
-                    "code": -32603,
-                    "message": str(e)
+                "id": req_id,
+                "result": {
+                    "protocolVersion": "2024-11-05",
+                    "capabilities": {
+                        "tools": {}
+                    },
+                    "serverInfo": {
+                        "name": "lumina-design-mcp",
+                        "version": "2.0.0"
+                    }
                 }
             }
-            sys.stdout.write(json.dumps(err_res) + "\n")
+        elif method in ("notifications/initialized", "initialized"):
+            # Client notification that initialization is complete -> NEVER reply
+            continue
+        elif method == "ping":
+            res = {
+                "jsonrpc": "2.0",
+                "id": req_id,
+                "result": {}
+            }
+        elif method == "tools/list":
+            res = {
+                "jsonrpc": "2.0",
+                "id": req_id,
+                "result": {
+                    "tools": TOOLS
+                }
+            }
+        elif method == "tools/call":
+            tool_name = params.get("name")
+            tool_args = params.get("arguments", {})
+            tool_res = handle_call_tool(tool_name, tool_args)
+            res = {
+                "jsonrpc": "2.0",
+                "id": req_id,
+                "result": {
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": json.dumps(tool_res, indent=2, ensure_ascii=False)
+                        }
+                    ]
+                }
+            }
+        elif method == "resources/list":
+            res = {
+                "jsonrpc": "2.0",
+                "id": req_id,
+                "result": {
+                    "resources": []
+                }
+            }
+        elif method == "prompts/list":
+            res = {
+                "jsonrpc": "2.0",
+                "id": req_id,
+                "result": {
+                    "prompts": []
+                }
+            }
+        else:
+            if is_notification:
+                # Silently ignore any unhandled notifications
+                continue
+            res = {
+                "jsonrpc": "2.0",
+                "id": req_id,
+                "error": {
+                    "code": -32601,
+                    "message": f"Method not found: {method}"
+                }
+            }
+
+        try:
+            sys.stdout.write(json.dumps(res, ensure_ascii=False) + "\n")
             sys.stdout.flush()
+        except Exception:
+            pass
 
 if __name__ == "__main__":
     main()
